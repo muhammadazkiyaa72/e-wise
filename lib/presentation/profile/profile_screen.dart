@@ -1,6 +1,7 @@
 import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/colors.dart';
 import 'package:ewise/core/values/font_weight.dart';
+import 'package:ewise/presentation/widgets/profile_widget.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -101,9 +102,37 @@ class ProfileScreen extends StatelessWidget {
             ),
             Container(
               color: AppColors.grey2,
-              width: 320,
+              width: double.infinity,
               height: 0.5,
-            )
+            ),
+            const ProfileWidget(
+              iconAsset: 'assets/icons/ic_setting.png',
+              nameMenu: 'Pengaturan',
+            ),
+            const ProfileWidget(
+              iconAsset: 'assets/icons/ic_WisePoint.png',
+              nameMenu: 'WisePoin Saya',
+            ),
+            const ProfileWidget(
+              iconAsset: 'assets/icons/ic_history.png',
+              nameMenu: 'Riwayat pickup',
+            ),
+            const ProfileWidget(
+              iconAsset: 'assets/icons/ic_help.png',
+              nameMenu: 'Bantuan dan Laporan',
+            ),
+            const ProfileWidget(
+              iconAsset: 'assets/icons/ic_location_on.png',
+              nameMenu: 'Alamat Favorit',
+            ),
+            const ProfileWidget(
+              iconAsset: 'assets/icons/ic_notification.png',
+              nameMenu: 'Notifikasi',
+            ),
+            const ProfileWidget(
+              iconAsset: 'assets/icons/ic_information.png',
+              nameMenu: 'Tentang e-Wise',
+            ),
           ],
         ),
       ),

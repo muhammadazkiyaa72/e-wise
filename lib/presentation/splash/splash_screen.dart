@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
             height: 25,
           ),
           Text(
-            "e-wise",
+            "e-Wise",
             style: Styles.primaryTextStyle.copyWith(
               decoration: TextDecoration.none,
               fontWeight: AppFontWeight.bold,
