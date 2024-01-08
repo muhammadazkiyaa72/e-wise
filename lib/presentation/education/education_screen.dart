@@ -1,7 +1,12 @@
 import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/colors.dart';
 import 'package:ewise/core/values/font_weight.dart';
+import 'package:ewise/presentation/widgets/berita_widget.dart';
+import 'package:ewise/presentation/widgets/galeri_widget.dart';
+import 'package:ewise/presentation/widgets/video_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EducationScreen extends StatefulWidget {
   const EducationScreen({super.key});
@@ -13,6 +18,17 @@ class EducationScreen extends StatefulWidget {
 class _EducationScreenState extends State<EducationScreen> {
   @override
   Widget build(BuildContext context) {
+    final Uri url = Uri.parse("https://www.youtube.com/watch?v=8AkC49d_HIE");
+    final Uri url2 = Uri.parse("https://www.youtube.com/watch?v=8AkC49d_HIE");
+    final Uri url3 = Uri.parse("https://www.youtube.com/watch?v=Tj4fnRS3WgE");
+
+    //berita
+    final Uri url4 = Uri.parse(
+        "https://www.kompas.id/baca/metro/2023/07/13/75-tonsampah-elektronik-dibuang-di-jakarta-setiap-hari");
+    final Uri url5 = Uri.parse(
+        "https://yoursay.suara.com/kolom/2023/04/18/104520/dampak-buruk-yang-tersembunyi-dari-e-waste-kasus-kabut-elektronik-di-cina");
+    final Uri url6 = Uri.parse(
+        "https://bandungbergerak.id/article/detail/159172/menilik-peran-komunitas-e-waste-bandung-dalam-mengelola-limbah-elektronik");
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 95,
@@ -43,7 +59,7 @@ class _EducationScreenState extends State<EducationScreen> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
@@ -58,135 +74,40 @@ class _EducationScreenState extends State<EducationScreen> {
               const SizedBox(
                 height: 10,
               ),
-              Center(
-                child: SizedBox(
-                  width: 330,
-                  height: 241,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        left: 0,
-                        top: 0,
-                        child: Container(
-                          width: 330,
-                          height: 229,
-                          decoration: ShapeDecoration(
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            shadows: const [
-                              BoxShadow(
-                                color: Color(0x3F000000),
-                                blurRadius: 4,
-                                offset: Offset(0, 4),
-                                spreadRadius: 0,
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 0,
-                        top: 0,
-                        child: Container(
-                          width: 330,
-                          height: 157,
-                          decoration: ShapeDecoration(
-                            image: const DecorationImage(
-                              image: NetworkImage(
-                                  "https://via.placeholder.com/327x157"),
-                              fit: BoxFit.fill,
-                            ),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                          ),
-                        ),
-                      ),
-                      const Positioned(
-                        left: 15,
-                        top: 151,
-                        child: SizedBox(
-                          width: 309,
-                          height: 90,
-                          child: Text(
-                            '\nSampah Elektronik, Peluang, Tantangan dan Nilai Ekonomi\n\n',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 12,
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w500,
-                              height: 0,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const Positioned(
-                        left: 15,
-                        top: 207,
-                        child: Text(
-                          'DITJEN PSLB3 KLHK',
-                          style: TextStyle(
-                            color: Color(0xFF546881),
-                            fontSize: 12,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w400,
-                            height: 0,
-                          ),
-                        ),
-                      ),
-                      const Positioned(
-                        left: 254,
-                        top: 210,
-                        child: Text(
-                          '13 Juni 2023',
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                            color: Color(0xFF546881),
-                            fontSize: 10,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w400,
-                            height: 0,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 15,
-                        top: 58,
-                        child: SizedBox(
-                          width: 170,
-                          height: 96,
-                          child: Stack(
-                            children: [
-                              const Positioned(
-                                left: 0,
-                                top: 78,
-                                child: Text(
-                                  '04:00',
-                                  style: TextStyle(
-                                    color: Color(0xFFB2BBC6),
-                                    fontSize: 12,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w400,
-                                    height: 0,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                left: 130,
-                                top: 0,
-                                child: Container(
-                                  width: 40,
-                                  height: 40,
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: const BoxDecoration(),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+              SizedBox(
+                height: 256,
+                width: double.infinity,
+                child: ListView(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    VideoWidgets(
+                      url: url,
+                      judul:
+                          'Sampah Elektronik, Peluang, Tantangan dan Nilai Ekonomi',
+                      sumber: 'DITJEN PSLB3 KLHK',
+                      tanggal: '13 Juni 2023',
+                      assetImage: 'assets/img/video.png',
+                      durasi: '04:00',
+                    ),
+                    VideoWidgets(
+                      url: url2,
+                      judul: 'Bahaya Limbah Elektronik',
+                      sumber: 'CNN Indonesia',
+                      tanggal: '12 November 2023',
+                      assetImage: 'assets/img/video2.png',
+                      durasi: '03:15',
+                    ),
+                    VideoWidgets(
+                      url: url3,
+                      judul:
+                          'Kreatif! Lukisan Keren Ini Terbuat Dari Limbah Elektronik',
+                      sumber: 'TRANS7',
+                      tanggal: '7 Desember 2023',
+                      assetImage: 'assets/img/video3.png',
+                      durasi: '02:37',
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(
@@ -202,101 +123,82 @@ class _EducationScreenState extends State<EducationScreen> {
               const SizedBox(
                 height: 10,
               ),
-              Center(
-                child: SizedBox(
-                  width: 327,
-                  height: 241,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        left: 0,
-                        top: 0,
-                        child: Container(
-                          width: 327,
-                          height: 229,
-                          decoration: ShapeDecoration(
-                            color: Colors.white,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            shadows: const [
-                              BoxShadow(
-                                color: Color(0x3F000000),
-                                blurRadius: 4,
-                                offset: Offset(0, 4),
-                                spreadRadius: 0,
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 0,
-                        top: 0,
-                        child: Container(
-                          width: 327,
-                          height: 157,
-                          decoration: ShapeDecoration(
-                            image: const DecorationImage(
-                              image: NetworkImage(
-                                  "https://via.placeholder.com/327x157"),
-                              fit: BoxFit.fill,
-                            ),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                          ),
-                        ),
-                      ),
-                      const Positioned(
-                        left: 15,
-                        top: 151,
-                        child: SizedBox(
-                          width: 309,
-                          height: 90,
-                          child: Text(
-                            '\nSetiap Hari, 75 Ton Sampah Elektronik Dibuang di Jakarta\n\n',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 12,
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w500,
-                              height: 0,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const Positioned(
-                        left: 15,
-                        top: 207,
-                        child: Text(
-                          'kompas.id',
-                          style: TextStyle(
-                            color: Color(0xFF546881),
-                            fontSize: 12,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w400,
-                            height: 0,
-                          ),
-                        ),
-                      ),
-                      const Positioned(
-                        left: 255,
-                        top: 210,
-                        child: Text(
-                          '13 July 2023',
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                            color: Color(0xFF546881),
-                            fontSize: 10,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w400,
-                            height: 0,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+              SizedBox(
+                height: 256,
+                width: double.infinity,
+                child: ListView(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    BeritaWidgets(
+                      url2: url4,
+                      judul:
+                          'Setiap Hari, 75 Ton Sampah Elektronik Dibuang di Jakarta',
+                      tanggal: '13 July 2023',
+                      sumber: 'kompas.id',
+                      assetImage: 'assets/img/berita.png',
+                    ),
+                    BeritaWidgets(
+                      url2: url5,
+                      judul:
+                          'Dampak Buruk yang Tersembunyi dari E-Waste: Kasus Kabut Elektronik di Cina',
+                      tanggal: '18 April 2023',
+                      sumber: 'yoursay.id',
+                      assetImage: 'assets/img/berita2.png',
+                    ),
+                    BeritaWidgets(
+                      url2: url6,
+                      judul:
+                          'Menilik Peran Komunitas E-waste Bandung dalam Mengelola Limbah Elektronik',
+                      tanggal: '7 Desember 2023',
+                      sumber: 'Bandung Bergerak',
+                      assetImage: 'assets/img/berita3.png',
+                    ),
+                  ],
                 ),
-              )
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                'Galeri',
+                style: Styles.blackTextStyle.copyWith(
+                  fontWeight: AppFontWeight.medium,
+                  fontSize: 20,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              SizedBox(
+                height: 256,
+                width: double.infinity,
+                child: ListView(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  children: const [
+                    GaleriWidgets(
+                      judul: 'Serangga hasil transformasi limbah elektronik',
+                      tanggal: '13 July 2023',
+                      assetImage: 'assets/img/galeri.png',
+                      sumber: 'Greeners.co',
+                    ),
+                    GaleriWidgets(
+                      judul:
+                          'Replika Bonsai dari Limbah Barang Elektronik yang Tak Terpakai',
+                      tanggal: '18 April 2023',
+                      assetImage: 'assets/img/galeri2.png',
+                      sumber: 'Pilar.ID',
+                    ),
+                    GaleriWidgets(
+                      judul: 'Miniatur Gajah dari Limbah TV Rusak',
+                      tanggal: '7 Desember 2023',
+                      assetImage: 'assets/img/galeri3.png',
+                      sumber: 'Tripadvisor',
+                    )
+                  ],
+                ),
+              ),
             ],
           ),
         ),

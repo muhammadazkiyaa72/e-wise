@@ -1,6 +1,7 @@
 import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/colors.dart';
 import 'package:ewise/core/values/font_weight.dart';
+import 'package:ewise/presentation/chat/chat_screen.dart';
 import 'package:ewise/presentation/education/education_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -203,7 +204,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 22,
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Get.to(const ChatScreen());
+                      },
                       child: SizedBox(
                         width: 192,
                         height: 42,

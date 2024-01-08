@@ -1,6 +1,8 @@
+import 'package:ewise/presentation/chat/chat_screen.dart';
 import 'package:ewise/presentation/education/education_screen.dart';
 import 'package:ewise/presentation/login/login_screen.dart';
 import 'package:ewise/presentation/splash/splash_screen.dart';
+import 'package:ewise/presentation/status_pickup/status_pickup_screen.dart';
 import 'package:ewise/routes/routes.dart';
 import 'package:get/get.dart';
 
@@ -17,6 +19,14 @@ class Pages {
     GetPage(
       name: Routes.education,
       page: () => const EducationScreen(),
+    ),
+    GetPage(
+      name: Routes.statusPickup,
+      page: () => const StatusPickup(),
+    ),
+     GetPage(
+      name: Routes.chat,
+      page: () => const ChatScreen(),
     ),
   ];
 }
