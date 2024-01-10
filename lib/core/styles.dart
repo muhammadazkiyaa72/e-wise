@@ -18,4 +18,8 @@ class Styles {
   static TextStyle secondaryTextStyle = GoogleFonts.poppins(
     color: AppColors.s10,
   );
+
+  static TextStyle nTextStyle = GoogleFonts.poppins(
+    color: AppColors.n20,
+  );
 }

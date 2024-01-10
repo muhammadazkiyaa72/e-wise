@@ -4,4 +4,6 @@ class Routes {
   static const education = '/education';
   static const statusPickup = '/statusPickup';
   static const chat = '/chat';
+  static const detailChat = '/detailChat';
+  static const findLocation = '/findLocation';
 }

@@ -3,6 +3,8 @@ import 'package:ewise/core/values/colors.dart';
 import 'package:ewise/core/values/font_weight.dart';
 import 'package:ewise/presentation/chat/chat_screen.dart';
 import 'package:ewise/presentation/education/education_screen.dart';
+import 'package:ewise/presentation/profile/profile_screen.dart';
+import 'package:ewise/presentation/status_pickup/status_pickup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -130,7 +132,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 10,
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.to(const StatusPickupScreen());
+                },
                 child: Text(
                   'Lupa kata sandi?',
                   style: Styles.primaryTextStyle.copyWith(
@@ -265,22 +269,27 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 30,
                     ),
                     Center(
-                      child: RichText(
-                        text: TextSpan(
-                            text: 'belum punya akun?',
-                            style: Styles.primaryTextStyle.copyWith(
-                              fontSize: 14,
-                              fontWeight: AppFontWeight.medium,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: ' buat akun',
-                                style: Styles.primaryTextStyle.copyWith(
-                                  fontSize: 14,
-                                  fontWeight: AppFontWeight.bold,
-                                ),
+                      child: GestureDetector(
+                        onTap: () {
+                          Get.to(const ProfileScreen());
+                        },
+                        child: RichText(
+                          text: TextSpan(
+                              text: 'belum punya akun?',
+                              style: Styles.primaryTextStyle.copyWith(
+                                fontSize: 14,
+                                fontWeight: AppFontWeight.medium,
                               ),
-                            ]),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: ' buat akun',
+                                  style: Styles.primaryTextStyle.copyWith(
+                                    fontSize: 14,
+                                    fontWeight: AppFontWeight.bold,
+                                  ),
+                                ),
+                              ]),
+                        ),
                       ),
                     )
                   ],
