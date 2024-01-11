@@ -5,8 +5,6 @@ import 'package:ewise/presentation/widgets/berita_widget.dart';
 import 'package:ewise/presentation/widgets/galeri_widget.dart';
 import 'package:ewise/presentation/widgets/video_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class EducationScreen extends StatefulWidget {
   const EducationScreen({super.key});
