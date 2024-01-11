@@ -3,6 +3,7 @@ import 'package:ewise/core/values/colors.dart';
 import 'package:ewise/core/values/font_weight.dart';
 import 'package:ewise/presentation/about_ewise/about_ewise_screen.dart';
 import 'package:ewise/presentation/find_location/find_location_screen.dart';
+import 'package:ewise/presentation/find_location/search_location_screen.dart';
 import 'package:ewise/presentation/help_center/help_center_screen.dart';
 import 'package:ewise/presentation/widgets/profile_widget.dart';
 import 'package:flutter/material.dart';
@@ -120,7 +121,9 @@ class ProfileScreen extends StatelessWidget {
               ProfileWidget(
                 iconAsset: 'assets/icons/ic_WisePoint.png',
                 nameMenu: 'WisePoin Saya',
-                onPressed: () {},
+                onPressed: () {
+                  Get.to(const SearchLocationScreen());
+                },
               ),
               ProfileWidget(
                 iconAsset: 'assets/icons/ic_history.png',

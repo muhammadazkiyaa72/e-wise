@@ -5,6 +5,7 @@ class AppColors {
   static const Color p30 = Color(0xff205014);
   static const Color p40 = Color(0xff39682A);
   static const Color p50 = Color(0xff518242);
+  static const Color p90 = Color(0xffB8F1A3);
   static const Color black = Colors.black;
   static const Color white = Colors.white;
   static const Color s10 = Color(0xff0F1F0B);
