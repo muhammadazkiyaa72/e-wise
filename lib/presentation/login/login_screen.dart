@@ -2,8 +2,8 @@ import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/colors.dart';
 import 'package:ewise/core/values/font_weight.dart';
 import 'package:ewise/presentation/chat/chat_screen.dart';
-import 'package:ewise/presentation/education/education_screen.dart';
-import 'package:ewise/presentation/profile/profile_screen.dart';
+import 'package:ewise/presentation/homepage/homepage_screen.dart';
+import 'package:ewise/presentation/register/register.dart';
 import 'package:ewise/presentation/status_pickup/status_pickup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -148,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               GestureDetector(
                 onTap: () {
-                  Get.to(const EducationScreen());
+                  Get.to(const HomePageScreen());
                 },
                 child: SizedBox(
                   height: 42,
@@ -271,7 +271,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Center(
                       child: GestureDetector(
                         onTap: () {
-                          Get.to(const ProfileScreen());
+                          Get.to(const RegisterPage());
                         },
                         child: RichText(
                           text: TextSpan(
