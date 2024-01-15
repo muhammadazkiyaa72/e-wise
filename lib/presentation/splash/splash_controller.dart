@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 class SplashController extends GetxController {
   void delayAndNavigate() async {
-    await Future.delayed(const Duration(seconds: 5));
+    await Future.delayed(const Duration(seconds: 10));
     Get.off(() => const LoginScreen());
   }
 }

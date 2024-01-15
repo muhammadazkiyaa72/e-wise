@@ -9,24 +9,23 @@ class ContactItem extends StatelessWidget {
   final String nameContact;
   final String lastChat;
   final String date;
-  const ContactItem(
-      {super.key,
-      required this.assetImage,
-      required this.nameContact,
-      required this.lastChat,
-      required this.date});
+  final VoidCallback onPressed;
+  const ContactItem({
+    super.key,
+    required this.assetImage,
+    required this.nameContact,
+    required this.lastChat,
+    required this.date,
+    required this.onPressed,
+  
+  });
 
   @override
   Widget build(BuildContext context) {
     bool isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
     return GestureDetector(
-      onTap: () {
-        Get.to(ChatDetailScreen(
-          nameContact: nameContact,
-          assetsImage: assetImage,
-        ));
-      },
+      onTap: onPressed,
       child: Column(
         children: [
           const SizedBox(

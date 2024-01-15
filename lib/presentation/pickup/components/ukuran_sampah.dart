@@ -21,8 +21,9 @@ class _UkuranSampahCardState extends State<UkuranSampahCard> {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
+      
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3, crossAxisSpacing: 20, childAspectRatio: 10 / 10),
+            crossAxisCount: 3, crossAxisSpacing: 15, childAspectRatio: 10 / 10),
         shrinkWrap: true,
         itemCount: UkuranSampahCard.ukuranSampah.length,
         itemBuilder: (context, index) {
@@ -42,6 +43,7 @@ class _UkuranSampahCardState extends State<UkuranSampahCard> {
               });
             },
             child: Container(
+              
               decoration: BoxDecoration(
                   color: backgroundColor,
                   borderRadius: BorderRadius.circular(10)),

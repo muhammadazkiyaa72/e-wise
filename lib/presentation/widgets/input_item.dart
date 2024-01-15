@@ -5,21 +5,21 @@ class InputItem extends StatefulWidget {
   final Function()? onTapAdd;
   final GestureTapCallback? onTapCamera;
   final GestureTapCallback? onTapPicture;
-  const InputItem(
-      {super.key, this.onTapAdd, this.onTapCamera, this.onTapPicture});
+  final TextEditingController messageController; // Marked as required
+
+  const InputItem({
+    Key? key,
+    required this.onTapAdd,
+    required this.onTapCamera,
+    required this.onTapPicture,
+    required this.messageController, // Marked as required
+  }) : super(key: key);
 
   @override
   State<InputItem> createState() => _InputItemState();
 }
 
 class _InputItemState extends State<InputItem> {
-  TextEditingController _textEditingController = TextEditingController();
-  @override
-  void dispose() {
-    _textEditingController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -48,10 +48,9 @@ class _InputItemState extends State<InputItem> {
               width: 248,
               height: 44,
               child: TextFormField(
-                controller: _textEditingController,
+                controller: widget.messageController,
                 onChanged: (text) {
-                  setState(
-                      () {}); // Trigger a rebuild to update button visibility
+                  setState(() {});
                 },
                 decoration: InputDecoration(
                   filled: true,
@@ -82,7 +81,7 @@ class _InputItemState extends State<InputItem> {
               ),
             ),
           ),
-          if (_textEditingController.text.isNotEmpty)
+          if (widget.messageController.text.isNotEmpty)
             IconButton(
               onPressed: widget.onTapAdd,
               icon: const Icon(Icons.send),

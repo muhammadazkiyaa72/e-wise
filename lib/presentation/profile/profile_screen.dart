@@ -5,14 +5,16 @@ import 'package:ewise/presentation/about_ewise/about_ewise_screen.dart';
 import 'package:ewise/presentation/find_location/find_location_screen.dart';
 import 'package:ewise/presentation/help_center/help_center_screen.dart';
 import 'package:ewise/presentation/notification/notification.dart';
+import 'package:ewise/presentation/profile/profile_controller.dart';
+import 'package:ewise/presentation/riwayatpenukaran/riwayat_penukaran.dart';
 import 'package:ewise/presentation/widgets/profile_widget.dart';
 import 'package:ewise/presentation/wisepoin/wisepoin.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
-
+  ProfileScreen({super.key});
+  final controller = Get.put(ProfileController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,44 +58,58 @@ class ProfileScreen extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Zahid Azmi Ibrahim',
-                            style: Styles.blackTextStyle.copyWith(
-                              fontSize: 16,
-                              fontWeight: AppFontWeight.semiBold,
-                            ),
+                          FutureBuilder<String?>(
+                            future: controller.getUserData(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                final displayName = snapshot.data;
+                                final userEmail = controller.getUserEmail();
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      displayName ?? '',
+                                      style: Styles.blackTextStyle.copyWith(
+                                        fontSize: 16,
+                                        fontWeight: AppFontWeight.semiBold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      userEmail ??
+                                          '', // You can replace this with the actual email
+                                      style: Styles.blackTextStyle.copyWith(
+                                        fontSize: 14,
+                                        fontWeight: AppFontWeight.regular,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 6,
+                                    ),
+                                    Container(
+                                      width: 74,
+                                      height: 22,
+                                      color: AppColors.grey3,
+                                      child: Center(
+                                        child: Text(
+                                          'Zero waste',
+                                          style: Styles.blackTextStyle.copyWith(
+                                            fontSize: 11,
+                                            fontWeight: AppFontWeight.regular,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }
+                            },
                           ),
-                          Text(
-                            'zahid18@gmail.com',
-                            style: Styles.blackTextStyle.copyWith(
-                              fontSize: 14,
-                              fontWeight: AppFontWeight.regular,
-                            ),
-                          ),
-                          Text(
-                            '+62812345678910',
-                            style: Styles.blackTextStyle.copyWith(
-                              fontSize: 14,
-                              fontWeight: AppFontWeight.regular,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 6,
-                          ),
-                          Container(
-                            width: 74,
-                            height: 22,
-                            color: AppColors.grey3,
-                            child: Center(
-                              child: Text(
-                                'Zero waste',
-                                style: Styles.blackTextStyle.copyWith(
-                                  fontSize: 11,
-                                  fontWeight: AppFontWeight.regular,
-                                ),
-                              ),
-                            ),
-                          )
                         ],
                       )
                     ],
@@ -129,7 +145,9 @@ class ProfileScreen extends StatelessWidget {
               ProfileWidget(
                 iconAsset: 'assets/icons/ic_history.png',
                 nameMenu: 'Riwayat pickup',
-                onPressed: () {},
+                onPressed: () {
+                  Get.to(const RiwayatPenukaran());
+                },
               ),
               ProfileWidget(
                 iconAsset: 'assets/icons/ic_help.png',
@@ -141,7 +159,9 @@ class ProfileScreen extends StatelessWidget {
               ProfileWidget(
                 iconAsset: 'assets/icons/ic_location_on.png',
                 nameMenu: 'Alamat Favorit',
-                onPressed: () {},
+                onPressed: () {
+                  Get.to(const HelpCenterScreen());
+                },
               ),
               ProfileWidget(
                 iconAsset: 'assets/icons/ic_notification.png',
@@ -155,6 +175,13 @@ class ProfileScreen extends StatelessWidget {
                 nameMenu: 'Tentang e-Wise',
                 onPressed: () {
                   Get.to(const AboutEWise());
+                },
+              ),
+              ProfileWidget(
+                iconAsset: 'assets/icons/ic_logout.png',
+                nameMenu: 'Logout',
+                onPressed: () {
+                  controller.logout();
                 },
               ),
             ],

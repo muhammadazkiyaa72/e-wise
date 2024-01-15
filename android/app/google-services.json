@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "1082852302068",
+    "project_id": "project-ewise",
+    "storage_bucket": "project-ewise.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1082852302068:android:8f74b3dcfae9d6b52fd2a1",
+        "android_client_info": {
+          "package_name": "com.example.ewise"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1082852302068-f0s5kh5o775ipmij4m2pjnelq6jtguu5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ewise",
+            "certificate_hash": "2b7e072e8aebb2eb19df9a99e73dcfc3ce56d1ac"
+          }
+        },
+        {
+          "client_id": "1082852302068-fu2jbkpobdv583ab4bvbfcd4tqhurhkj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDw-BOaNbOEoq2kaclVhSQGLNXCkJWy2SY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1082852302068-fu2jbkpobdv583ab4bvbfcd4tqhurhkj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1082852302068-21iq7coragbjac84ohsdmpuf90d9d0ei.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ewise"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

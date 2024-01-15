@@ -2,8 +2,10 @@ import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/colors.dart';
 import 'package:ewise/core/values/font_weight.dart';
 import 'package:ewise/presentation/chat/chat_screen.dart';
+import 'package:ewise/presentation/forget_password_otp/forget_password_email_page.dart';
 import 'package:ewise/presentation/homepage/homepage_screen.dart';
-import 'package:ewise/presentation/register/register.dart';
+import 'package:ewise/presentation/login/login_controller.dart';
+import 'package:ewise/presentation/register/register_screen.dart';
 import 'package:ewise/presentation/status_pickup/status_pickup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,6 +18,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final controller = Get.put(LoginController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,6 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   children: [
                     TextFormField(
+                      controller: controller.email,
                       decoration: InputDecoration(
                         hintText: 'Email',
                         hintStyle: Styles.blackTextStyle,
@@ -99,32 +103,36 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(
                       height: 19,
                     ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        hintText: 'Kata Sandi',
-                        hintStyle: Styles.blackTextStyle,
-                        filled: true,
-                        contentPadding: const EdgeInsets.all(16),
-                        fillColor: AppColors.a10,
-                        enabledBorder: const UnderlineInputBorder(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(4),
-                              topRight: Radius.circular(4)),
-                          borderSide: BorderSide(
-                            color: AppColors.grey2,
+                    Obx(() => TextFormField(
+                          obscureText: !controller.showPassword.value,
+                          controller: controller.password,
+                          decoration: InputDecoration(
+                            hintText: 'Kata Sandi',
+                            hintStyle: Styles.blackTextStyle,
+                            filled: true,
+                            contentPadding: const EdgeInsets.all(16),
+                            fillColor: AppColors.a10,
+                            enabledBorder: const UnderlineInputBorder(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(4),
+                                  topRight: Radius.circular(4)),
+                              borderSide: BorderSide(
+                                color: AppColors.grey2,
+                              ),
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: AppColors.p50,
+                              ),
+                            ),
+                            suffixIcon: IconButton(
+                              icon: controller.showPassword.value
+                                  ? const Icon(Icons.visibility)
+                                  : const Icon(Icons.visibility_off),
+                              onPressed: () => controller.showPassword.toggle(),
+                            ),
                           ),
-                        ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: AppColors.p50,
-                          ),
-                        ),
-                        suffixIcon: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.visibility),
-                        ),
-                      ),
-                    ),
+                        )),
                   ],
                 ),
               ),
@@ -133,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               TextButton(
                 onPressed: () {
-                  Get.to(const StatusPickupScreen());
+                  Get.to(const ForgetPasswordEmailPage());
                 },
                 child: Text(
                   'Lupa kata sandi?',
@@ -148,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               GestureDetector(
                 onTap: () {
-                  Get.to(const HomePageScreen());
+                  controller.login();
                 },
                 child: SizedBox(
                   height: 42,
@@ -209,7 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Get.to(const ChatScreen());
+                        controller.loginUserWithGoogle();
                       },
                       child: SizedBox(
                         width: 192,
@@ -271,7 +279,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Center(
                       child: GestureDetector(
                         onTap: () {
-                          Get.to(const RegisterPage());
+                          Get.to(const RegisterScreen());
                         },
                         child: RichText(
                           text: TextSpan(

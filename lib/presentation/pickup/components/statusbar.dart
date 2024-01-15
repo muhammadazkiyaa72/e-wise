@@ -2,10 +2,12 @@ import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/colors.dart';
 import 'package:ewise/core/values/font_weight.dart';
 import 'package:ewise/presentation/pickup/components/ukuran_sampah.dart';
+import 'package:ewise/presentation/pickup/pickup_controller.dart';
 import 'package:flutter/material.dart';
 
 class StatusBar extends StatefulWidget {
-  const StatusBar({super.key});
+  final PickupController pickupController;
+  const StatusBar({super.key, required this.pickupController});
 
   @override
   State<StatusBar> createState() => _StatusBarState();
@@ -15,6 +17,14 @@ class _StatusBarState extends State<StatusBar> {
   int tappedIndex = 0;
 
   final TextEditingController _dateController = TextEditingController();
+  late Future<void> locationDetailsFuture;
+  @override
+  void initState() {
+    super.initState();
+    // Start fetching user location details when the widget is initialized
+    locationDetailsFuture = widget.pickupController.getUserLocationDetails();
+  }
+
   @override
   Widget build(BuildContext context) {
     Future<void> selectDate() async {
@@ -69,7 +79,7 @@ class _StatusBarState extends State<StatusBar> {
                               fontSize: 12,
                               fontWeight: AppFontWeight.semiBold)),
                       const SizedBox(
-                        height: 10,
+                        height: 5,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -85,23 +95,17 @@ class _StatusBarState extends State<StatusBar> {
                               label: 'Konfirmasi',
                               icon: Icons.history,
                               isTapped: tappedIndex == 2,
-                              onPressed: () => setState(() {
-                                    tappedIndex = 2;
-                                  })),
+                              onPressed: () {}),
                           StatusButton(
                               label: 'Pickup',
                               icon: Icons.history,
                               isTapped: tappedIndex == 3,
-                              onPressed: () => setState(() {
-                                    tappedIndex = 3;
-                                  })),
+                              onPressed: () {}),
                           StatusButton(
                               label: 'Selesai',
                               icon: Icons.check_circle_outline_outlined,
                               isTapped: tappedIndex == 4,
-                              onPressed: () => setState(() {
-                                    tappedIndex = 4;
-                                  })),
+                              onPressed: () {}),
                         ],
                       ),
 
@@ -115,6 +119,7 @@ class _StatusBarState extends State<StatusBar> {
                         style: Styles.blackTextStyle.copyWith(
                             fontSize: 12, fontWeight: AppFontWeight.semiBold),
                       ),
+
                       const UkuranSampahCard(),
 
                       const SizedBox(
@@ -122,87 +127,112 @@ class _StatusBarState extends State<StatusBar> {
                       ),
 
                       // form field
-                      Form(
-                          child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          TextFormField(
-                            readOnly: true,
-                            decoration: InputDecoration(
-                                isDense: true,
-                                contentPadding: EdgeInsets.only(top: 5),
-                                filled: true,
-                                fillColor: AppColors.a10,
-                                labelText: 'Lokasi Penjemputan',
-                                labelStyle: Styles.blackTextStyle
-                                    .copyWith(fontSize: 12),
-                                hintText: 'Pilih lokasi penjemputan',
-                                hintStyle: Styles.blackTextStyle
-                                    .copyWith(fontSize: 12),
-                                prefixIcon:
-                                    const Icon(Icons.location_on_outlined)),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          TextFormField(
-                            readOnly: true,
-                            decoration: InputDecoration(
-                                isDense: true,
-                                contentPadding: EdgeInsets.only(top: 5),
-                                filled: true,
-                                fillColor: AppColors.a10,
-                                labelText: 'e-Waste Bank',
-                                hintText: 'Pilih e-Waste Bank',
-                                labelStyle: Styles.blackTextStyle
-                                    .copyWith(fontSize: 12),
-                                hintStyle: Styles.blackTextStyle
-                                    .copyWith(fontSize: 12),
-                                prefixIcon:
-                                    const Icon(Icons.location_on_outlined)),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          TextFormField(
-                            controller: _dateController,
-                            onTap: selectDate,
-                            readOnly: true,
-                            decoration: InputDecoration(
-                                isDense: true,
-                                contentPadding: EdgeInsets.only(top: 5),
-                                filled: true,
-                                fillColor: AppColors.a10,
-                                labelText: 'Jadwal',
-                                hintText: 'DD/MM/YY',
-                                labelStyle: Styles.blackTextStyle
-                                    .copyWith(fontSize: 12),
-                                hintStyle: Styles.blackTextStyle
-                                    .copyWith(fontSize: 12),
-                                prefixIcon: const Icon(Icons.today_outlined)),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          TextFormField(
-                            maxLength: 100,
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 2),
-                              filled: true,
-                              fillColor: AppColors.a10,
-                              labelText: 'Catatan',
-                              hintText: 'Berikan Catatan',
-                              labelStyle:
-                                  Styles.blackTextStyle.copyWith(fontSize: 12),
-                              hintStyle:
-                                  Styles.blackTextStyle.copyWith(fontSize: 12),
-                              helperText: 'Max 100 kata',
-                            ),
-                          ),
-                        ],
-                      )),
+                      FutureBuilder(
+                          future: locationDetailsFuture,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              // Return a loading indicator while waiting for location details
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            } else if (snapshot.hasError) {
+                              // Handle error
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              return Form(
+                                  child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  TextFormField(
+                                    readOnly: true,
+                                    controller: widget.pickupController
+                                        .pickupLocationController,
+                                    decoration: InputDecoration(
+                                        isDense: true,
+                                        contentPadding:
+                                            const EdgeInsets.only(top: 5),
+                                        filled: true,
+                                        fillColor: AppColors.a10,
+                                        labelText: 'Lokasi Penjemputan',
+                                        labelStyle: Styles.blackTextStyle
+                                            .copyWith(fontSize: 12),
+                                        hintText: 'Pilih lokasi penjemputan',
+                                        hintStyle: Styles.blackTextStyle
+                                            .copyWith(fontSize: 12),
+                                        prefixIcon: const Icon(
+                                            Icons.location_on_outlined)),
+                                  ),
+                                  const SizedBox(
+                                    height: 30,
+                                  ),
+                                  TextFormField(
+                                    readOnly: true,
+                                    controller:
+                                        widget.pickupController.ebankController,
+                                    decoration: InputDecoration(
+                                        isDense: true,
+                                        contentPadding:
+                                            const EdgeInsets.only(top: 5),
+                                        filled: true,
+                                        fillColor: AppColors.a10,
+                                        labelText: 'e-Waste Bank',
+                                        hintText: 'Pilih e-Waste Bank',
+                                        labelStyle: Styles.blackTextStyle
+                                            .copyWith(fontSize: 12),
+                                        hintStyle: Styles.blackTextStyle
+                                            .copyWith(fontSize: 12),
+                                        prefixIcon: const Icon(
+                                            Icons.location_on_outlined)),
+                                  ),
+                                  const SizedBox(
+                                    height: 30,
+                                  ),
+                                  TextFormField(
+                                    controller: _dateController,
+                                    onTap: selectDate,
+                                    readOnly: true,
+                                    decoration: InputDecoration(
+                                        isDense: true,
+                                        contentPadding:
+                                            const EdgeInsets.only(top: 5),
+                                        filled: true,
+                                        fillColor: AppColors.a10,
+                                        labelText: 'Jadwal',
+                                        hintText: 'DD/MM/YY',
+                                        labelStyle: Styles.blackTextStyle
+                                            .copyWith(fontSize: 12),
+                                        hintStyle: Styles.blackTextStyle
+                                            .copyWith(fontSize: 12),
+                                        prefixIcon:
+                                            const Icon(Icons.today_outlined)),
+                                  ),
+                                  const SizedBox(
+                                    height: 30,
+                                  ),
+                                  TextFormField(
+                                    maxLength: 100,
+                                    controller:
+                                        widget.pickupController.notesController,
+                                    decoration: InputDecoration(
+                                      isDense: true,
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 2),
+                                      filled: true,
+                                      fillColor: AppColors.a10,
+                                      labelText: 'Catatan',
+                                      hintText: 'Berikan Catatan',
+                                      labelStyle: Styles.blackTextStyle
+                                          .copyWith(fontSize: 12),
+                                      hintStyle: Styles.blackTextStyle
+                                          .copyWith(fontSize: 12),
+                                      helperText: 'Max 100 kata',
+                                    ),
+                                  ),
+                                ],
+                              ));
+                            }
+                          }),
                     ],
                   ),
                   const SizedBox(
@@ -210,7 +240,7 @@ class _StatusBarState extends State<StatusBar> {
                   ),
                   ElevatedButton(
                       onPressed: () {
-                        print('Konfirmasi');
+                        widget.pickupController.submitPickupForm();
                       },
                       style: ButtonStyle(
                           shape: MaterialStatePropertyAll(
@@ -224,7 +254,9 @@ class _StatusBarState extends State<StatusBar> {
                         child: Text(
                           'Atur Penjemputan',
                           style: Styles.whiteTextStyle.copyWith(
-                              fontSize: 10, fontWeight: AppFontWeight.semiBold),
+                            fontSize: 20,
+                            fontWeight: AppFontWeight.medium,
+                          ),
                         ),
                       )),
                 ],
@@ -274,15 +306,17 @@ class _StatusButtonState extends State<StatusButton> {
                 color: foregroundColor,
               )),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Center(
-              child: Text(widget.label,
-                  style: TextStyle(
-                      fontSize: 8,
-                      fontWeight: AppFontWeight.medium,
-                      color: backgroundColor)),
+              child: Text(
+                widget.label,
+                style: TextStyle(
+                    fontSize: 8,
+                    fontWeight: AppFontWeight.medium,
+                    color: backgroundColor),
+              ),
             )
           ],
         ));

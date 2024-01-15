@@ -2,6 +2,7 @@ import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/font_weight.dart';
 import 'package:ewise/presentation/notification/components/notification_list.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class NotificationPage extends StatelessWidget {
   static List riwayatPoin = [
@@ -24,7 +25,9 @@ class NotificationPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Get.back();
+          },
           icon: const Icon(Icons.arrow_back),
         ),
         centerTitle: true,

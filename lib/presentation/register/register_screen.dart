@@ -1,23 +1,27 @@
 import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/colors.dart';
 import 'package:ewise/core/values/font_weight.dart';
+import 'package:ewise/data/model/user_model.dart';
 import 'package:ewise/presentation/login/login_screen.dart';
+import 'package:ewise/presentation/register/register_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'components/build_text_form_field.dart';
 import 'components/build_button.dart';
 // import 'package:get/get.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(RegisterController());
+    final formKey = GlobalKey<FormState>();
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -44,30 +48,41 @@ class _RegisterPageState extends State<RegisterPage> {
                 height: 30,
               ),
 
-              const Form(
+              Form(
+                key: formKey,
                 child: Column(
                   children: [
                     // email text field
                     BuildTextFormField(
+                      controller: controller.fullname,
+                      labelText: "Full Name",
+                    ),
+
+                    const SizedBox(
+                      height: 19,
+                    ),
+                    BuildTextFormField(
+                      controller: controller.email,
                       labelText: "Email",
                     ),
 
-                    SizedBox(
+                    const SizedBox(
                       height: 19,
                     ),
-
                     // password text field
                     BuildTextFormField(
+                      controller: controller.password,
                       labelText: "Kata Sandi",
                       isPassword: true,
                     ),
 
-                    SizedBox(
+                    const SizedBox(
                       height: 19,
                     ),
 
                     // password confirmation textfield
                     BuildTextFormField(
+                      controller: controller.confirmPassword,
                       labelText: "Konfirmasi Kata Sandi",
                       isPassword: true,
                     ),
@@ -80,7 +95,23 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
 
               // submit button
-              const BuildButton(),
+              BuildButton(
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    if (controller.password.text ==
+                        controller.confirmPassword.text) {
+                      final user = UserModel(
+                        fullName: controller.fullname.text.trim(),
+                        email: controller.email.text.trim(),
+                        password: controller.password.text.trim(),
+                      );
+                      RegisterController.instance.createUser(user);
+                    } else {
+                      Get.snackbar('Failed', 'Register gagal!!');
+                    }
+                  }
+                },
+              ),
 
               const SizedBox(
                 height: 10,

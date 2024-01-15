@@ -32,8 +32,8 @@ class _ChatItemState extends State<ChatItem> {
             Row(
               children: [
                 Container(
-                  width: 50,
-                  height: 50,
+                  width: 40,
+                  height: 40,
                   decoration: ShapeDecoration(
                     image: DecorationImage(
                       image: AssetImage(widget.assetImage),

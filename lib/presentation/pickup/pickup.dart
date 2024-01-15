@@ -1,11 +1,14 @@
-import 'package:ewise/core/values/api.dart';
+import 'package:ewise/presentation/pickup/pickup_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:get/get.dart';
+
+// ignore: library_prefixes
+import 'package:latlong2/latlong.dart' as latLng;
+
 import 'package:ewise/core/values/colors.dart';
 import 'package:ewise/presentation/pickup/components/splash_screen.dart';
 import 'package:ewise/presentation/pickup/components/statusbar.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
 
 class PickupPage extends StatefulWidget {
   const PickupPage({super.key});
@@ -15,62 +18,39 @@ class PickupPage extends StatefulWidget {
 }
 
 class _PickupPageState extends State<PickupPage> {
-  late GoogleMapController mapController;
-
-  // final LatLng _origin = const LatLng(-6.977780881500068, 107.63332967005071);
-  final LatLng _destination =
-      const LatLng(-6.264261616417689, 106.78302362342993);
-
-  List<LatLng> polylineCoordinates = [];
-  LocationData? currentLocation;
-
-  void _getCurrentLocation() {
-    Location location = Location();
-
-    location.getLocation().then((location) => setState(
-          () {
-            currentLocation = location;
-          },
-        ));
-  }
-
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-  }
-
-  void _getPolyPoints() async {
-    PolylinePoints polylinePoints = PolylinePoints();
-
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-        googleApiKey,
-        PointLatLng(currentLocation!.latitude!, currentLocation!.longitude!),
-        PointLatLng(_destination.latitude, _destination.longitude));
-
-    if (result.points.isNotEmpty) {
-      result.points.forEach((PointLatLng point) =>
-          polylineCoordinates.add(LatLng(point.latitude, point.longitude)));
-      setState(() {});
-    }
-  }
+  final PickupController pickupController = Get.put(PickupController());
 
   @override
   void initState() {
-    _getCurrentLocation();
-    _getPolyPoints();
+    initPage();
     super.initState();
+  }
+
+  Future<void> initPage() async {
+    pickupController.getCurrentLocation();
+    await pickupController.getUserLocationDetails();
+    setState(() {}); // Trigger a rebuild after fetching location details
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: currentLocation == null
-          ? null
-          : AppBar(
+    return FutureBuilder<void>(
+      future: pickupController.getUserLocationDetails(),
+      builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const SplashScreenMaps();
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
+          );
+        } else {
+          return Scaffold(
+            extendBodyBehindAppBar: true,
+            appBar: AppBar(
               backgroundColor: Colors.transparent,
               elevation: 0,
               leading: Container(
-                margin: EdgeInsets.all(5),
+                margin: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
                     color: AppColors.white,
                     borderRadius: BorderRadius.circular(15),
@@ -83,13 +63,15 @@ class _PickupPageState extends State<PickupPage> {
                       )
                     ]),
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.back();
+                  },
                   icon: const Icon(Icons.arrow_back),
                 ),
               ),
               actions: [
                 Container(
-                  margin: EdgeInsets.all(5),
+                  margin: const EdgeInsets.all(5),
                   decoration: BoxDecoration(
                       color: AppColors.white,
                       borderRadius: BorderRadius.circular(15),
@@ -108,38 +90,110 @@ class _PickupPageState extends State<PickupPage> {
                 ),
               ],
             ),
-      body: currentLocation == null
-          ? SplashScreenMaps()
-          : Stack(
+            body: Stack(
               children: [
-                GoogleMap(
-                  onMapCreated: _onMapCreated,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(currentLocation!.latitude!,
-                        currentLocation!.longitude!),
-                    zoom: 15,
+                FlutterMap(
+                  options: MapOptions(
+                    initialCenter: latLng.LatLng(
+                      pickupController.currentLocation!.latitude!,
+                      pickupController.currentLocation!.longitude!,
+                    ),
+                    //initialCenter: const latLng.LatLng(-6.9730017, 107.6291105),
+                    initialZoom: 15.0,
+                    bounds: LatLngBounds.fromPoints([
+                      latLng.LatLng(
+                        pickupController.currentLocation!.latitude!,
+                        pickupController.currentLocation!.longitude!,
+                      ), // User's position
+                      latLng.LatLng(
+                        pickupController
+                                .nearestWasteCollectionPoint['latitude'] ??
+                            0.0,
+                        pickupController
+                                .nearestWasteCollectionPoint['longitude'] ??
+                            0.0,
+                      ), // Nearest waste collection point
+                    ]),
+                    onPositionChanged: (position, hasGesture) {
+                      // Handle map position changes
+                    },
                   ),
-                  polylines: {
-                    Polyline(
-                        polylineId: const PolylineId('route'),
-                        points: polylineCoordinates,
-                        color: AppColors.black,
-                        width: 8)
-                  },
-                  markers: {
-                    Marker(
-                        markerId: const MarkerId('current location'),
-                        position: LatLng(currentLocation!.latitude!,
-                            currentLocation!.longitude!)),
-                    // const Marker(
-                    //     markerId: MarkerId('destination'),
-                    //     position:
-                    //         LatLng(-6.264261616417689, 106.78302362342993))
-                  },
+                  mapController: pickupController.mapController,
+                  children: [
+                    TileLayer(
+                      urlTemplate:
+                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      subdomains: const ['a', 'b', 'c'],
+                    ),
+                    PolylineLayer(
+                      polylines: [
+                        Polyline(
+                          points: pickupController.polylineCoordinates,
+                          strokeWidth: 8.0,
+                          color: Colors.black,
+                        ),
+                      ],
+                    ),
+                    MarkerLayer(
+                      markers: [
+                        // Marker for user's position
+                        Marker(
+                          point: latLng.LatLng(
+                            pickupController.currentLocation!.latitude!,
+                            pickupController.currentLocation!.longitude!,
+                          ),
+                          /* point: latLng.LatLng(
+                                currentLocation!.latitude!,
+                                currentLocation!.longitude!,
+                              ), */
+                          child: const UserMarkerWidget(),
+                        ),
+                        // Marker for the nearest waste collection point (e.g., "eBank")
+                        Marker(
+                          point: latLng.LatLng(
+                            pickupController
+                                .nearestWasteCollectionPoint['latitude'],
+                            pickupController
+                                .nearestWasteCollectionPoint['longitude'],
+                          ),
+                          child: const WasteCollectionMarkerWidget(),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                const StatusBar(),
+                StatusBar(pickupController: pickupController),
               ],
             ),
+          );
+        }
+      },
+    );
+  }
+}
+
+class UserMarkerWidget extends StatelessWidget {
+  const UserMarkerWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Icon(
+      Icons.location_pin,
+      color: Colors.red,
+      size: 30.0,
+    );
+  }
+}
+
+class WasteCollectionMarkerWidget extends StatelessWidget {
+  const WasteCollectionMarkerWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Icon(
+      Icons.location_pin,
+      color: Colors.red,
+      size: 30.0,
     );
   }
 }

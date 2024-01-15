@@ -1,7 +1,10 @@
+import 'package:ewise/presentation/chat/chat_controller.dart';
+import 'package:ewise/presentation/chat/chat_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/font_weight.dart';
 import 'package:ewise/presentation/widgets/contact_item.dart';
+import 'package:get/get.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key}) : super(key: key);
@@ -11,8 +14,29 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  final ChatController chatController = ChatController();
   TextEditingController searchController = TextEditingController();
   bool isSearching = false;
+
+  @override
+  void initState() {
+    super.initState();
+    chatController.getUsers();
+
+    // Check if there are any admins
+    if (chatController.users.isNotEmpty) {
+      // Fetch messages for the first admin in the list
+      String adminId =
+          chatController.users.firstWhere((user) => user.isAdmin).id ?? '';
+      chatController.getMessages(adminId);
+
+      Future.delayed(const Duration(seconds: 1), () {
+        // Find the last chat with the specific admin
+        var chat = chatController.findLastChatWithAdmin(adminId);
+        print('Last Message: ${chat.lastMessage}');
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,30 +100,35 @@ class _ChatScreenState extends State<ChatScreen> {
               const SizedBox(
                 height: 9,
               ),
-              const ContactItem(
-                assetImage: 'assets/img/iksan.png',
-                nameContact: 'Iksan Risandy',
-                date: '10/01/2024',
-                lastChat: 'Permisi, saya sudah di depan',
-              ),
-              const ContactItem(
-                assetImage: 'assets/img/haulul.png',
-                nameContact: 'Haulul Azkiyaa',
-                date: '01/01/2024',
-                lastChat: 'Baik kak',
-              ),
-              const ContactItem(
-                assetImage: 'assets/img/brian.png',
-                nameContact: 'Brian Anashari',
-                date: '28/12/2023',
-                lastChat: 'Boleh banget kak',
-              ),
-              const ContactItem(
-                assetImage: 'assets/img/wendy.png',
-                nameContact: 'Wendy',
-                date: '24/12/2023',
-                lastChat: 'Ok ditunggu ya',
-              ),
+              Obx(() {
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: chatController.users.length,
+                  itemBuilder: (context, index) {
+                    var user = chatController.users[index];
+                    //var chatAdmin = chatController.chats[index];
+                    if (user.isAdmin) {
+                      var chat = chatController.findLastChatWithAdmin(user.id!);
+                      return ContactItem(
+                        assetImage: 'assets/icons/ic_user.png',
+                        nameContact: user.fullName,
+                        date: '${chat.lastActive}',
+                        lastChat: ' Halo Juga Ka',
+                        onPressed: () {
+                          // Pass idUser to sendMessage
+
+                          Get.to(() => ChatDetailScreen(
+                                adminId: chat.idUser,
+                                adminName: user.fullName,
+                              ));
+                        },
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                );
+              }),
             ],
           ),
         ),

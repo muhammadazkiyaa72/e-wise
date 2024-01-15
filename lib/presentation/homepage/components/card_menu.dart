@@ -66,6 +66,9 @@ class _CardMenuState extends State<CardMenu> {
                 ),
               ),
             ),
+            const SizedBox(
+              height: 5,
+            ),
             Text(
               e['name'],
               style: Styles.primaryTextStyle.copyWith(

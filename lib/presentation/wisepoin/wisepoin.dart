@@ -24,7 +24,9 @@ class _WisePointState extends State<WisePoint> {
         backgroundColor: AppColors.p50,
         foregroundColor: AppColors.white,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Get.back();
+          },
           icon: const Icon(Icons.arrow_back),
         ),
         title: Text(

@@ -7,12 +7,14 @@ class BuildTextFormField extends StatefulWidget {
   final String labelText;
   final bool isPassword;
   final String helperText;
+  final TextEditingController controller;
 
   const BuildTextFormField({
     super.key,
     required this.labelText,
     this.helperText = "Gunakan kombinasi huruf dan angka ex brian18",
     this.isPassword = false,
+    required this.controller,
   });
 
   @override
@@ -27,15 +29,15 @@ class _BuildTextFormFieldState extends State<BuildTextFormField> {
 
   @override
   void initState() {
-    _controller = TextEditingController();
+    _controller = widget.controller;
     super.initState();
   }
 
-  @override
+/*   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {

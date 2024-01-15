@@ -2,98 +2,105 @@ import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/colors.dart';
 import 'package:ewise/core/values/font_weight.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class Informasi extends StatefulWidget {
-  static List cardMenu = [
-    {
-      'imagePath': 'assets/img/informasi_1.png',
-      'headline': 'Setiap Hari, 75 Ton Sampah Elektronik Dibuang di Jakarta',
-      'source': 'kompas.id',
-      'date': '13 July 2023'
-    },
-    {
-      'imagePath': 'assets/img/informasi_2.png',
-      'headline':
-          'Dampak Buruk yang Tersembunyi dari E-Waste: Kasus Kabut Elektronik di Cina',
-      'source': 'yoursay.id',
-      'date': '18 April 2023'
-    },
-    {
-      'imagePath': 'assets/img/informasi_3.png',
-      'headline':
-          'Menilik Peran Komunitas E-waste Bandung dalam Mengelola Limbah Elektronik',
-      'source': 'Bandung Bergerak',
-      'date': '7 Desember 2023'
-    },
-  ];
+class Informasi extends StatelessWidget {
+  final Uri url2;
+  final String judul;
+  final String tanggal;
+  final String assetImage;
+  final String sumber;
 
-  const Informasi({super.key});
+  const Informasi({
+    super.key,
+    required this.url2,
+    required this.judul,
+    required this.tanggal,
+    required this.assetImage,
+    required this.sumber,
+  });
 
-  @override
-  State<Informasi> createState() => _InformasiState();
-}
-
-class _InformasiState extends State<Informasi> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: Informasi.cardMenu.map((e) {
-          return GestureDetector(
-            onTap: () {
-              print("this clicked");
-            },
-            child: Material(
-              elevation: 5,
-              child: Column(
-                children: [
-                  // picture
-                  Image.asset(
-                    e['imagePath'],
-                    fit: BoxFit.fill,
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Column(
-                      children: [
-                        // title
-                        Text(
-                          e['headline'],
-                          style: Styles.blackTextStyle.copyWith(
-                              fontWeight: AppFontWeight.bold, fontSize: 10),
+    return GestureDetector(
+      onTap: () {
+        launchUrl(url2);
+      },
+      child: Center(
+        child: Card(
+          surfaceTintColor: AppColors.white,
+          color: AppColors.white,
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: 257,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Container(
+                      height: 157,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(8),
+                          bottom: Radius.circular(8),
                         ),
-
-                        // source and date
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // source
-                            Text(e['source'],
-                                style: TextStyle(
-                                    color: AppColors.grey2,
-                                    fontSize: 10,
-                                    fontWeight: AppFontWeight.regular)),
-
-                            // date
-                            Text(e['date'],
-                                style: TextStyle(
-                                    color: AppColors.grey2,
-                                    fontSize: 10,
-                                    fontWeight: AppFontWeight.regular)),
-                          ],
-                        )
-                      ],
+                        image: DecorationImage(
+                          image: AssetImage(assetImage),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
-                  )
-                ],
-              ),
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            judul,
+                            style: Styles.blackTextStyle.copyWith(
+                              fontSize: 12,
+                              fontWeight: AppFontWeight.medium,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                sumber,
+                                style: GoogleFonts.poppins(
+                                  color: const Color(0xff546881),
+                                  fontSize: 12,
+                                  fontWeight: AppFontWeight.regular,
+                                ),
+                              ),
+                              Text(
+                                tanggal,
+                                style: GoogleFonts.poppins(
+                                  color: const Color(0xff546881),
+                                  fontSize: 10,
+                                  fontWeight: AppFontWeight.regular,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          );
-        }).toList(),
+          ),
+        ),
       ),
     );
   }

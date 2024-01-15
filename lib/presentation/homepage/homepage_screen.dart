@@ -71,7 +71,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
         ),
 
         // Profile page
-        const Center(
+         Center(
           child: ProfileScreen(),
         ),
       ][currentPageIndex],

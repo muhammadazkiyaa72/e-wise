@@ -22,21 +22,30 @@ class _SlideBannerState extends State<SlideBanner> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CarouselSlider(
-          options: CarouselOptions(
-            autoPlay: true,
-            autoPlayAnimationDuration: Duration(milliseconds: 1000),
-            enableInfiniteScroll: true,
-            enlargeCenterPage: true,
-            aspectRatio: 16 / 9,
-            viewportFraction: 1,
-            onPageChanged: (index, reason) {
-              setState(() {
-                _current = index;
-              });
-            },
-          ),
-          items: SlideBanner.bannerItem,
+        OrientationBuilder(
+          builder: (context, orientation) {
+            double aspectRatio =
+                orientation == Orientation.portrait ? 16 / 9 : 3 / 2;
+            double viewportFraction =
+                orientation == Orientation.portrait ? 1.0 : 0.8;
+
+            return CarouselSlider(
+              options: CarouselOptions(
+                autoPlay: true,
+                autoPlayAnimationDuration: const Duration(milliseconds: 1000),
+                enableInfiniteScroll: true,
+                enlargeCenterPage: true,
+                aspectRatio: aspectRatio,
+                viewportFraction: viewportFraction,
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    _current = index;
+                  });
+                },
+              ),
+              items: SlideBanner.bannerItem,
+            );
+          },
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

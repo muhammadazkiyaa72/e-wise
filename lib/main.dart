@@ -1,9 +1,22 @@
+import 'package:ewise/data/repository/auth_repository.dart';
+import 'package:ewise/firebase_options.dart';
+import 'package:ewise/presentation/homepage/homepage_screen.dart';
+import 'package:ewise/presentation/login/login_screen.dart';
 import 'package:ewise/routes/pages_binding.dart';
 import 'package:ewise/routes/routes.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  Get.put(AuthRepository());
+
   runApp(const MyApp());
 }
 
@@ -18,8 +31,20 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      initialRoute: Routes.splash,
-      getPages: Pages.pages,
+      home: StreamBuilder<User?>(
+        stream: AuthRepository.instance.firebaseUserStream,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // Show a loading indicator or splash screen
+            return const CircularProgressIndicator();
+          } else {
+            // Authentication state has been initialized
+            return snapshot.hasData
+                ? const HomePageScreen()
+                : const LoginScreen();
+          }
+        },
+      ),
       debugShowCheckedModeBanner: false,
     );
   }

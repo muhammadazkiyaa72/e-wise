@@ -8,9 +8,12 @@ class Routes {
   static const findLocation = '/findLocation';
   static const register = '/register';
   static const homepage = '/homepage';
+  static const homepagescreen = '/homepagescreen';
   static const notification = '/notification';
   static const penukaranPoin = '/penukaranPoin';
   static const pickup = '/pickup';
   static const riwayatPenukaran = '/riwayatPenukaran';
   static const wisepoin = '/wisepoin';
+  static const profile = '/profile';
+  static const forgetPassword = '/forgetPassword';
 }

@@ -1,6 +1,7 @@
 import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/colors.dart';
 import 'package:ewise/core/values/font_weight.dart';
+import 'package:ewise/presentation/homepage/home_controller.dart';
 import 'package:ewise/presentation/penukaranpoin/penukaranpoin.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,6 +14,15 @@ class WisePoint extends StatefulWidget {
 }
 
 class _WisePointState extends State<WisePoint> {
+  final controller = Get.put(HomeController());
+
+  @override
+  void initState() {
+    super.initState();
+    // Call updateUserPoints when the widget is created
+    controller.updateUserPoints();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -30,11 +40,11 @@ class _WisePointState extends State<WisePoint> {
                 const SizedBox(
                   width: 12,
                 ),
-                Text(
-                  "5000",
-                  style: Styles.primaryTextStyle.copyWith(
-                      fontSize: 16, fontWeight: AppFontWeight.semiBold),
-                )
+                Obx(() => Text(
+                      "${controller.userPoints}",
+                      style: Styles.primaryTextStyle.copyWith(
+                          fontSize: 16, fontWeight: AppFontWeight.semiBold),
+                    )),
               ],
             ),
             GestureDetector(
