@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PickupModel {
-  final String userId; // ID of the user who is currently logged in
-  final String? pickupId; // Automatically generated pickup ID in Firebase
+  late final String? pickupId;
+  final String userId;
+
   final String wasteSize;
-  final String
-      pickupStatus; // Possible values: 'Konfirmasi', 'Pickup', 'Selesai'
+  final String pickupStatus;
   final String pickupAddress;
   final String ebankName;
   final String ebankAddress;
@@ -17,10 +17,11 @@ class PickupModel {
   final double userLongitude;
   final String pickupDate;
   final String notes;
+  Timestamp timestamp;
 
   PickupModel({
-    required this.userId,
     this.pickupId,
+    required this.userId,
     required this.wasteSize,
     required this.pickupStatus,
     required this.pickupAddress,
@@ -34,12 +35,12 @@ class PickupModel {
     required this.userLongitude,
     required this.pickupDate,
     required this.notes,
+    required this.timestamp,
   });
 
   toJson() {
     return {
       "userId": userId,
-      "pickupId": pickupId,
       "wasteSize": wasteSize,
       "pickupStatus": pickupStatus,
       "pickupAddress": pickupAddress,
@@ -53,6 +54,7 @@ class PickupModel {
       "userLongtitude": userLongitude,
       "pickupDate": pickupDate,
       "notes": notes,
+      'timestamp': timestamp,
     };
   }
 
@@ -60,8 +62,8 @@ class PickupModel {
       DocumentSnapshot<Map<String, dynamic>> document) {
     final data = document.data();
     return PickupModel(
-      userId: data?['userId'],
       pickupId: document.id,
+      userId: data?['userId'],
       wasteSize: data?['wasteSize'],
       pickupStatus: data?['pickupStatus'],
       pickupAddress: data?['pickupAddress'],
@@ -74,7 +76,8 @@ class PickupModel {
       userLatitude: data?['userLatitude'],
       userLongitude: data?['userLongtitude'],
       pickupDate: data?['pickupDate'],
-      notes: data?['notes'], 
+      notes: data?['notes'],
+      timestamp: data?['timestamp'],
     );
   }
 }

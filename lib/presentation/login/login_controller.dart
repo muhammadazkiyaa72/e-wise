@@ -1,5 +1,4 @@
 import 'package:ewise/data/repository/auth_repository.dart';
-import 'package:ewise/presentation/homepage/homepage_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -60,4 +59,5 @@ class LoginController extends GetxController {
       Get.snackbar("Google Login Error", "Failed to login with Google");
     }
   }
+  
 }

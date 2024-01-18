@@ -1,7 +1,6 @@
 import 'package:ewise/presentation/help_center/help_center_screen.dart';
 import 'package:ewise/presentation/homepage/home_controller.dart';
 import 'package:ewise/presentation/notification/notification.dart';
-import 'package:ewise/presentation/widgets/berita_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/colors.dart';

@@ -33,6 +33,7 @@ dependencies:
   cloud_firestore: ^4.14.0
   cupertino_icons: ^1.0.2
   dartleaf: ^1.1.4
+  draggable_bottom_sheet_nullsafety: ^1.0.2
   firebase_analytics: ^10.8.0
   firebase_auth: ^4.16.0
   firebase_core: ^2.24.2
@@ -44,12 +45,18 @@ dependencies:
   geocoding: ^2.1.1
   geolocator: ^10.1.0
   get: ^4.6.6
+  get_storage: ^2.1.1
   getwidget: ^4.0.0
   google_fonts: ^6.1.0
   google_maps_flutter: ^2.5.2
   google_sign_in: ^6.2.1
+  im_stepper: ^1.0.1+1
+  intl: ^0.19.0
   latlong2: ^0.9.0
   location: ^5.0.3
+  permission_handler: ^11.1.0
+  status_change: ^2.0.0
+  syncfusion_flutter_maps: ^24.1.46
   url_launcher: ^6.2.2
 
 dev_dependencies:

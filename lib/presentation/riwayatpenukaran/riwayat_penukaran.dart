@@ -1,243 +1,152 @@
 import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/colors.dart';
 import 'package:ewise/core/values/font_weight.dart';
+import 'package:ewise/presentation/riwayatpenukaran/components/all_riwayat_screen.dart';
+import 'package:ewise/presentation/riwayatpenukaran/components/in_riwayat_penukaran_screen.dart';
+import 'package:ewise/presentation/riwayatpenukaran/components/out_riwayat_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-class RiwayatPenukaran extends StatefulWidget {
-  static List riwayatPoin = [
-    {'amount': 250, 'date': '12/12/2023', 'masuk': false, 'ditukar': true},
-    {'amount': 250, 'date': '12/12/2023', 'masuk': false, 'ditukar': true},
-    {'amount': 700, 'date': '12/12/2023', 'masuk': true, 'ditukar': false},
-    {'amount': 700, 'date': '12/12/2023', 'masuk': true, 'ditukar': false},
-    {'amount': 700, 'date': '12/12/2023', 'masuk': true, 'ditukar': false},
-    {'amount': 50, 'date': '12/12/2023', 'masuk': true, 'ditukar': false},
-    {'amount': 250, 'date': '12/12/2023', 'masuk': false, 'ditukar': true},
-  ];
+class RiwayatPenukaranScreen extends StatefulWidget {
+  const RiwayatPenukaranScreen({Key? key}) : super(key: key);
 
-  const RiwayatPenukaran({super.key});
   @override
-  State<RiwayatPenukaran> createState() => _RiwayatPenukaranState();
+  _RiwayatPenukaranScreenState createState() => _RiwayatPenukaranScreenState();
 }
 
-class _RiwayatPenukaranState extends State<RiwayatPenukaran> {
-  int tappedIndex = 0;
+class _RiwayatPenukaranScreenState extends State<RiwayatPenukaranScreen> {
+  late int _selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = 0; // Set the default selected index
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: const Icon(Icons.arrow_back),
+        title: Text(
+          'Riwayat',
+          style: Styles.blackTextStyle.copyWith(
+            fontSize: 25,
+            fontWeight: AppFontWeight.semiBold,
+          ),
         ),
-        title: Text('Riwayat',
-            style: Styles.blackTextStyle
-                .copyWith(fontSize: 16, fontWeight: AppFontWeight.bold)),
       ),
-      body: SingleChildScrollView(
-        controller: ScrollController(),
-        physics: ClampingScrollPhysics(),
+      body: Padding(
+        padding: const EdgeInsets.only(
+          right: 24,
+          left: 24,
+        ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
-              height: 5,
-            ),
             SizedBox(
               height: 50,
               width: double.infinity,
               child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: RiwayatButton(
-                          name: 'Semua',
-                          isTapped: tappedIndex == 0,
-                          onPressed: () => setState(() {
-                                tappedIndex = 0;
-                              })),
+                    FilterButton(
+                      label: 'Semua',
+                      isSelected: _selectedIndex == 0,
+                      onPressed: () {
+                        _onFilterButtonPressed(0);
+                      },
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: RiwayatButton(
-                          name: 'Poin Masuk',
-                          isTapped: tappedIndex == 1,
-                          onPressed: () => setState(() {
-                                tappedIndex = 1;
-                              })),
+                    const SizedBox(
+                      width: 26,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: RiwayatButton(
-                          name: 'Ditukarkan',
-                          isTapped: tappedIndex == 2,
-                          onPressed: () => setState(() {
-                                tappedIndex = 2;
-                              })),
+                    FilterButton(
+                      label: 'Poin Masuk',
+                      isSelected: _selectedIndex == 1,
+                      onPressed: () {
+                        _onFilterButtonPressed(1);
+                      },
+                    ),
+                    const SizedBox(
+                      width: 26,
+                    ),
+                    FilterButton(
+                      label: 'Ditukarkan',
+                      isSelected: _selectedIndex == 2,
+                      onPressed: () {
+                        _onFilterButtonPressed(2);
+                      },
                     ),
                   ],
                 ),
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            Container(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+            Expanded(
               child: IndexedStack(
-                index: tappedIndex,
-                children: [
-                  RiwayatPoinList(riwayatPoin: RiwayatPenukaran.riwayatPoin),
-                  RiwayatPoinList(
-                      riwayatPoin: RiwayatPenukaran.riwayatPoin
-                          .where((element) => element['masuk'])
-                          .toList()),
-                  RiwayatPoinList(
-                      riwayatPoin: RiwayatPenukaran.riwayatPoin
-                          .where((element) => element['ditukar'])
-                          .toList()),
+                index: _selectedIndex,
+                children: const [
+                  AllRiwayatScreen(),
+                  InRiwayatScreen(),
+                  OutRiwayatScreen(),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
     );
   }
-}
 
-class RiwayatButton extends StatefulWidget {
-  final String name;
-  final bool isTapped;
-  final VoidCallback onPressed;
-
-  const RiwayatButton(
-      {super.key,
-      required this.name,
-      required this.isTapped,
-      required this.onPressed});
-
-  @override
-  State<RiwayatButton> createState() => _RiwayatButtonState();
-}
-
-class _RiwayatButtonState extends State<RiwayatButton> {
-  @override
-  Widget build(BuildContext context) {
-    Color backgroundColor = widget.isTapped ? AppColors.p40 : AppColors.white;
-    Color foregroundColor = widget.isTapped ? AppColors.white : AppColors.black;
-    return InkWell(
-      onTap: widget.onPressed,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-        decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x3F000000),
-                blurRadius: 4,
-                offset: Offset(0, 4),
-                spreadRadius: 0,
-              )
-            ]),
-        child: Center(
-          child: Text(
-            widget.name,
-            style: TextStyle(
-                color: foregroundColor, fontWeight: AppFontWeight.medium),
-          ),
-        ),
-      ),
-    );
+  void _onFilterButtonPressed(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 }
 
-class RiwayatPoinList extends StatefulWidget {
-  final List riwayatPoin;
-  const RiwayatPoinList({super.key, required this.riwayatPoin});
+class FilterButton extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onPressed;
 
-  @override
-  State<RiwayatPoinList> createState() => _RiwayatPoinListState();
-}
+  const FilterButton({
+    super.key,
+    required this.label,
+    required this.isSelected,
+    required this.onPressed,
+  });
 
-class _RiwayatPoinListState extends State<RiwayatPoinList> {
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      shrinkWrap: true,
-      itemCount: widget.riwayatPoin.length,
-      itemBuilder: (context, index) {
-        return Container(
-            decoration: BoxDecoration(color: AppColors.white, boxShadow: const [
-              BoxShadow(
-                color: Color(0x3F000000),
-                blurRadius: 4,
-                offset: Offset(0, 4),
-                spreadRadius: 0,
-              )
-            ]),
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Center(
-                    child: Text(
-                      '${widget.riwayatPoin[index]['amount']}',
-                      style: Styles.primaryTextStyle.copyWith(
-                          fontSize: 20, fontWeight: AppFontWeight.semiBold),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              widget.riwayatPoin[index]['masuk']
-                                  ? 'Poin Masuk'
-                                  : 'Poin Ditukar',
-                              style: Styles.primaryTextStyle.copyWith(
-                                  fontSize: 12,
-                                  fontWeight: AppFontWeight.semiBold),
-                            ),
-                            Text(
-                              widget.riwayatPoin[index]['date'],
-                              style: Styles.primaryTextStyle.copyWith(
-                                  fontSize: 8,
-                                  fontWeight: AppFontWeight.regular),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Text(
-                        widget.riwayatPoin[index]['masuk']
-                            ? 'Berhasil mendapatkan poin'
-                            : 'Penukaran poin dengan DANA',
-                        style: Styles.blackTextStyle.copyWith(
-                            fontSize: 11, fontWeight: AppFontWeight.medium),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ));
-      },
-      separatorBuilder: (context, index) => const SizedBox(
-        height: 15,
+    return InkWell(
+      onTap: onPressed,
+      child: Container(
+        width: 111,
+        height: 36,
+        decoration: BoxDecoration(
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x3F000000),
+              blurRadius: 4,
+              offset: Offset(0, 4),
+              spreadRadius: 0,
+            )
+          ],
+          borderRadius: BorderRadius.circular(50),
+          color: isSelected ? AppColors.p50 : AppColors.white,
+          border: Border.all(
+            color: isSelected ? AppColors.p50 : AppColors.white,
+            width: 1,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: TextStyle(
+              color: isSelected ? AppColors.white : AppColors.black,
+            ),
+          ),
+        ),
       ),
     );
   }

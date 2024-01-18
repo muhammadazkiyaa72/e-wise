@@ -1,10 +1,19 @@
+import 'package:flutter/material.dart';
+
 import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/colors.dart';
 import 'package:ewise/core/values/font_weight.dart';
-import 'package:flutter/material.dart';
 
 class DetailLocationScreen extends StatelessWidget {
-  const DetailLocationScreen({super.key});
+  final String imageURL;
+  final String name;
+  final String alamat;
+  const DetailLocationScreen({
+    Key? key,
+    required this.imageURL,
+    required this.name,
+    required this.alamat,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +32,8 @@ class DetailLocationScreen extends StatelessWidget {
                   width: 154,
                   height: 141,
                   decoration: BoxDecoration(
-                    image: const DecorationImage(
-                      image: const AssetImage('assets/img/ebank1.png'),
+                    image: DecorationImage(
+                      image: NetworkImage(imageURL),
                       fit: BoxFit.fill,
                     ),
                     borderRadius: BorderRadius.circular(15),
@@ -35,7 +44,7 @@ class DetailLocationScreen extends StatelessWidget {
                 height: 14,
               ),
               Text(
-                'Bank Sampah Bersinar',
+                name,
                 style: Styles.blackTextStyle.copyWith(
                   fontWeight: AppFontWeight.semiBold,
                   fontSize: 16,
@@ -78,7 +87,7 @@ class DetailLocationScreen extends StatelessWidget {
                         height: 8,
                       ),
                       Text(
-                        'Bank Sampah Bersinar merupakan bank sampah umum yang berada di wilayah bojongsoang',
+                        'Bank $name merupakan bank sampah umum yang berada di wilayah jawa barat',
                         textAlign: TextAlign.justify,
                         style: Styles.blackTextStyle.copyWith(
                           fontWeight: AppFontWeight.regular,
@@ -334,7 +343,7 @@ class DetailLocationScreen extends StatelessWidget {
                         height: 8,
                       ),
                       Text(
-                        'Jl. Terusan Bojongsoang No.174, Baleendah, Kec.Baleendah, Kabupaten Bandung, Jawa Barat 40375',
+                        alamat,
                         textAlign: TextAlign.justify,
                         style: Styles.blackTextStyle.copyWith(
                           fontWeight: AppFontWeight.regular,

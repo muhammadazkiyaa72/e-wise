@@ -9,7 +9,6 @@ class UserRepository extends GetxController {
   static UserRepository get instance => Get.find();
 
   final _db = FirebaseFirestore.instance;
-
   createUser(UserModel user) async {
     try {
       await _db.collection("Users").add(user.toJson());
@@ -58,25 +57,50 @@ class UserRepository extends GetxController {
       // Handle the error or rethrow it if needed
     }
   }
+
   Future<double> getUserPoints(String userEmail) async {
     try {
-      // Query the 'points' collection in Firestore
-      final querySnapshot = await FirebaseFirestore.instance
+      // Query Firestore to get user points
+      var userPointsQuery = await FirebaseFirestore.instance
           .collection('points')
           .where('idUser', isEqualTo: userEmail)
           .get();
 
-      // If there is a document, return the points value, else return 0
-      if (querySnapshot.docs.isNotEmpty) {
-        final points = querySnapshot.docs.first.data()['point'] as double;
-        return points;
+      if (userPointsQuery.docs.isNotEmpty) {
+        // Get the first document (assuming the email is unique)
+        var userPointsData = userPointsQuery.docs.first.data();
+        var points = userPointsData['point'] ?? 0.0;
+        return points.toDouble();
       } else {
-        return 0;
+        // If no document found, return 0 points or handle it as needed
+        return 0.0;
       }
-    } catch (error) {
-      print("Error in getUserPoints: $error");
-      // Handle the error or rethrow it if needed
-      return 0;
+    } catch (e) {
+      // Handle the error appropriately
+      print("Error fetching user points: $e");
+      return 0.0;
+    }
+  }
+
+  Future<PointModel> getUserWisePoints(String userEmail) async {
+    try {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('wisepoints')
+          .where('idUser', isEqualTo: userEmail)
+          .get();
+
+      if (userDoc.docs.isNotEmpty) {
+        final userData = userDoc.docs.first.data();
+        return PointModel.fromSnapshot(
+            userData as DocumentSnapshot<Map<String, dynamic>>);
+      } else {
+        // Return a default value or handle the case when the user document is not found
+        return PointModel(point: 0, masuk: 0, keluar: 0, idUser: userEmail);
+      }
+    } catch (e) {
+      print('Error getting user wise points: $e');
+      // Handle the error as needed
+      return PointModel(point: 0, masuk: 0, keluar: 0, idUser: userEmail);
     }
   }
 }

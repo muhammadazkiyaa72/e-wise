@@ -1,8 +1,8 @@
 import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/font_weight.dart';
 import 'package:ewise/presentation/education/education_screen.dart';
-import 'package:ewise/presentation/find_location/find_location_screen.dart';
-import 'package:ewise/presentation/pickup/pickup.dart';
+import 'package:ewise/presentation/find_location/search_location_screen.dart';
+import 'package:ewise/presentation/pickup/components/splash_screen.dart';
 import 'package:ewise/presentation/wisepoin/wisepoin.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,12 +15,12 @@ class CardMenu extends StatefulWidget {
     {
       'imagePath': 'assets/img/icon-park-outline_delivery.png',
       'name': 'Pickup',
-      'route': const PickupPage()
+      'route': const SplashScreenMaps()
     },
     {
       'imagePath': 'assets/img/icon-find-e-bank.png',
       'name': 'Lokasi e-Bank',
-      'route': const FindLocationScreen()
+      'route': const SearchLocationScreen()
     },
     {
       'imagePath': 'assets/img/icon-feature-wisepoint.png',

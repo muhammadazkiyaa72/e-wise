@@ -2,7 +2,7 @@ import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/colors.dart';
 import 'package:ewise/core/values/font_weight.dart';
 import 'package:ewise/presentation/about_ewise/about_ewise_screen.dart';
-import 'package:ewise/presentation/find_location/find_location_screen.dart';
+import 'package:ewise/presentation/alamat_favorite/alamat_favorite_screen.dart';
 import 'package:ewise/presentation/help_center/help_center_screen.dart';
 import 'package:ewise/presentation/notification/notification.dart';
 import 'package:ewise/presentation/profile/profile_controller.dart';
@@ -131,9 +131,7 @@ class ProfileScreen extends StatelessWidget {
               ProfileWidget(
                 iconAsset: 'assets/icons/ic_setting.png',
                 nameMenu: 'Pengaturan',
-                onPressed: () {
-                  Get.to(const FindLocationScreen());
-                },
+                onPressed: () {},
               ),
               ProfileWidget(
                 iconAsset: 'assets/icons/ic_WisePoint.png',
@@ -146,7 +144,7 @@ class ProfileScreen extends StatelessWidget {
                 iconAsset: 'assets/icons/ic_history.png',
                 nameMenu: 'Riwayat pickup',
                 onPressed: () {
-                  Get.to(const RiwayatPenukaran());
+                  Get.to(const RiwayatPenukaranScreen());
                 },
               ),
               ProfileWidget(
@@ -160,7 +158,7 @@ class ProfileScreen extends StatelessWidget {
                 iconAsset: 'assets/icons/ic_location_on.png',
                 nameMenu: 'Alamat Favorit',
                 onPressed: () {
-                  Get.to(const HelpCenterScreen());
+                  Get.to(const AlamatFavoriteScreen());
                 },
               ),
               ProfileWidget(

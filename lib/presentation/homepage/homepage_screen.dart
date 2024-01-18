@@ -1,9 +1,11 @@
+import 'package:ewise/presentation/homepage/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:ewise/presentation/chat/chat_screen.dart';
 import 'package:ewise/presentation/profile/profile_screen.dart';
 import 'package:ewise/presentation/status_pickup/status_pickup_screen.dart';
 import 'package:ewise/core/values/colors.dart';
 import 'package:ewise/presentation/homepage/components/homepage.dart';
+import 'package:get/get.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
@@ -12,7 +14,16 @@ class HomePageScreen extends StatefulWidget {
 }
 
 class _HomePageScreenState extends State<HomePageScreen> {
+  final controller = Get.put(HomeController());
   int currentPageIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      controller.updateUserPoints();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +82,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
         ),
 
         // Profile page
-         Center(
+        Center(
           child: ProfileScreen(),
         ),
       ][currentPageIndex],

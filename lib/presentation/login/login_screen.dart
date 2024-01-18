@@ -1,12 +1,9 @@
 import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/colors.dart';
 import 'package:ewise/core/values/font_weight.dart';
-import 'package:ewise/presentation/chat/chat_screen.dart';
 import 'package:ewise/presentation/forget_password_otp/forget_password_email_page.dart';
-import 'package:ewise/presentation/homepage/homepage_screen.dart';
 import 'package:ewise/presentation/login/login_controller.dart';
 import 'package:ewise/presentation/register/register_screen.dart';
-import 'package:ewise/presentation/status_pickup/status_pickup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

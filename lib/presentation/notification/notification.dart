@@ -77,7 +77,7 @@ class NotificationPage extends StatelessWidget {
                     notificationList: riwayatPoin
                         .where((element) =>
                             formatDate(
-                                DateTime.now().subtract(Duration(days: 1))) ==
+                                DateTime.now().subtract(const Duration(days: 1))) ==
                             element['date'])
                         .toList()),
               ),

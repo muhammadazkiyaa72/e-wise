@@ -19,8 +19,9 @@ class _WisePointState extends State<WisePoint> {
   @override
   void initState() {
     super.initState();
-    // Call updateUserPoints when the widget is created
-    controller.updateUserPoints();
+    setState(() {
+      controller.updateUserPoints();
+    });
   }
 
   @override
@@ -40,11 +41,15 @@ class _WisePointState extends State<WisePoint> {
                 const SizedBox(
                   width: 12,
                 ),
-                Obx(() => Text(
-                      "${controller.userPoints}",
-                      style: Styles.primaryTextStyle.copyWith(
-                          fontSize: 16, fontWeight: AppFontWeight.semiBold),
-                    )),
+                Obx(() {
+                  return Text(
+                    "${controller.userPoints.toInt()}",
+                    style: Styles.primaryTextStyle.copyWith(
+                      fontSize: 16,
+                      fontWeight: AppFontWeight.semiBold,
+                    ),
+                  );
+                }),
               ],
             ),
             GestureDetector(

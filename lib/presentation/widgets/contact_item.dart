@@ -1,8 +1,6 @@
 import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/font_weight.dart';
-import 'package:ewise/presentation/chat/chat_detail_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class ContactItem extends StatelessWidget {
   final String assetImage;

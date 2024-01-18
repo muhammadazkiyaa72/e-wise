@@ -1,26 +1,43 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
 import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/colors.dart';
 import 'package:ewise/core/values/font_weight.dart';
+import 'package:ewise/presentation/penukaranpoin/penukaranpoin_controller.dart';
 import 'package:ewise/presentation/wisepoin/components/poin_card.dart';
 
 class UangTunaiPage extends StatefulWidget {
+  final VoidCallback onNextTab;
+  final TabController tabController;
   static List listUang = [
-    'Rp 5.000',
-    'Rp 10.000',
-    'Rp 15.000',
-    'Rp 30.000',
-    'Rp 40.000',
-    'Rp 50.000',
+    5000,
+    10000,
+    15000,
+    30000,
+    40000,
+    50000,
   ];
 
-  const UangTunaiPage({super.key});
+  const UangTunaiPage({
+    Key? key,
+    required this.tabController,
+    required this.onNextTab,
+  }) : super(key: key);
 
   @override
   State<UangTunaiPage> createState() => _UangTunaiPageState();
 }
 
 class _UangTunaiPageState extends State<UangTunaiPage> {
+  final PenukaranPoinController controller = Get.put(PenukaranPoinController());
+  @override
+  void initState() {
+    super.initState();
+    controller.updateUserPoints();
+  }
+
   int tappedIndex = -1;
 
   @override
@@ -70,14 +87,12 @@ class _UangTunaiPageState extends State<UangTunaiPage> {
 
                   return GestureDetector(
                       onTap: () {
-                        print('${UangTunaiPage.listUang[index]}');
                         setState(() {
                           tappedIndex = index;
-                          if (tappedIndex != index) {
-                            borderColor = AppColors.p90;
-                            if (tappedIndex != -1) {
-                              tappedIndex = -1;
-                            }
+                          if (tappedIndex != -1) {
+                            // Call the method to update the selected nominal value
+                            controller.updateSelectedNominal(double.parse(
+                                UangTunaiPage.listUang[index].toString()));
                           }
                         });
                       },
@@ -87,7 +102,8 @@ class _UangTunaiPageState extends State<UangTunaiPage> {
                         decoration: BoxDecoration(
                             border: Border.all(color: borderColor)),
                         child: Center(
-                          child: Text(UangTunaiPage.listUang[index],
+                          child: Text(
+                              'Rp ' + UangTunaiPage.listUang[index].toString(),
                               style: TextStyle(
                                 fontSize: 12,
                                 color: nominalColor,
@@ -98,28 +114,122 @@ class _UangTunaiPageState extends State<UangTunaiPage> {
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 0, 10, 60.0),
-            child: ElevatedButton(
-                onPressed: () {
-                  print('Tarik Saldo');
-                },
-                style: ButtonStyle(
-                    elevation: MaterialStatePropertyAll(5),
-                    shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10))),
-                    backgroundColor:
-                        const MaterialStatePropertyAll(AppColors.p40),
-                    padding: const MaterialStatePropertyAll(
-                        EdgeInsets.symmetric(vertical: 8))),
-                child: Center(
-                  child: Text(
-                    'Tarik Saldo',
-                    style: Styles.whiteTextStyle.copyWith(
-                        fontSize: 16, fontWeight: AppFontWeight.medium),
-                  ),
-                )),
-          ),
+          Obx(() => Padding(
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 60.0),
+                child: controller.userPoints >= 5000 && tappedIndex == -1
+                    ? ElevatedButton(
+                        onPressed: null,
+                        style: ButtonStyle(
+                          elevation: const MaterialStatePropertyAll(5),
+                          shape:
+                              MaterialStatePropertyAll(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          )),
+                          backgroundColor:
+                              const MaterialStatePropertyAll(AppColors.n20),
+                          padding: const MaterialStatePropertyAll(
+                            EdgeInsets.symmetric(vertical: 8),
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Pilih Nominal',
+                            style: Styles.whiteTextStyle.copyWith(
+                              fontSize: 16,
+                              fontWeight: AppFontWeight.medium,
+                            ),
+                          ),
+                        ),
+                      )
+                    : (controller.userPoints >= 5000 && tappedIndex != -1)
+                        ? ElevatedButton(
+                            onPressed: () {
+                              if (tappedIndex != -1 &&
+                                  controller.userPoints >= 5000) {
+                                // If a nominal is selected and userPoints >= 5000
+                                widget.tabController
+                                    .animateTo(1); // Move to the next tab
+                                widget.onNextTab();
+                                controller.nominal = controller.selectedNominal;
+                              }
+                            },
+                            style: ButtonStyle(
+                              elevation: const MaterialStatePropertyAll(5),
+                              shape: MaterialStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              )),
+                              backgroundColor:
+                                  const MaterialStatePropertyAll(AppColors.p40),
+                              padding: const MaterialStatePropertyAll(
+                                EdgeInsets.symmetric(vertical: 8),
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'Tarik Saldo',
+                                style: Styles.whiteTextStyle.copyWith(
+                                  fontSize: 16,
+                                  fontWeight: AppFontWeight.medium,
+                                ),
+                              ),
+                            ),
+                          )
+                        : (controller.userPoints >= 5000 &&
+                                tappedIndex != -1 &&
+                                controller.selectedNominal <
+                                    controller.userPoints.toDouble())
+                            ? ElevatedButton(
+                                onPressed: null,
+                                style: ButtonStyle(
+                                  elevation: const MaterialStatePropertyAll(5),
+                                  shape: MaterialStatePropertyAll(
+                                      RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  )),
+                                  backgroundColor:
+                                      const MaterialStatePropertyAll(
+                                          AppColors.n20),
+                                  padding: const MaterialStatePropertyAll(
+                                    EdgeInsets.symmetric(vertical: 8),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Saldo Anda Belum Cukup',
+                                    style: Styles.whiteTextStyle.copyWith(
+                                      fontSize: 16,
+                                      fontWeight: AppFontWeight.medium,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : ElevatedButton(
+                                onPressed: null,
+                                style: ButtonStyle(
+                                  elevation: const MaterialStatePropertyAll(5),
+                                  shape: MaterialStatePropertyAll(
+                                      RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  )),
+                                  backgroundColor:
+                                      const MaterialStatePropertyAll(
+                                          AppColors.n20),
+                                  padding: const MaterialStatePropertyAll(
+                                    EdgeInsets.symmetric(vertical: 8),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Saldo Anda Belum Cukup',
+                                    style: Styles.whiteTextStyle.copyWith(
+                                      fontSize: 16,
+                                      fontWeight: AppFontWeight.medium,
+                                    ),
+                                  ),
+                                ),
+                              ),
+              )),
         ],
       ),
     );

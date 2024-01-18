@@ -1,8 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ewise/data/repository/login_email_password_failure.dart';
 import 'package:ewise/data/repository/register_email_password_failure.dart';
 import 'package:ewise/presentation/homepage/homepage_screen.dart';
 import 'package:ewise/presentation/login/login_screen.dart';
-import 'package:ewise/presentation/splash/splash_screen.dart';
 import 'package:ewise/routes/routes.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,7 +36,7 @@ class AuthRepository extends GetxController {
   }
 
   setInitialScreen(User? user) {
-    if (user != null) {
+    if (user != null && _auth.currentUser != null) {
       Get.offAll(() => const HomePageScreen());
     } else {
       Get.offAll(() => const LoginScreen());
@@ -52,7 +52,7 @@ class AuthRepository extends GetxController {
       // Wait for a short duration to allow _auth.currentUser to be updated
       await Future.delayed(const Duration(seconds: 1));
 
-      if (_firebaseUser.value != null) {
+      if (_firebaseUser.value != null && _auth.currentUser != null) {
         Get.offAll(() => const HomePageScreen());
       } else {
         Get.offAll(() => const LoginScreen());
@@ -74,7 +74,7 @@ class AuthRepository extends GetxController {
 
       // Wait for a short duration to allow _auth.currentUser to be updated
       await Future.delayed(const Duration(seconds: 1));
-      if (_firebaseUser.value != null) {
+      if (_firebaseUser.value != null && _auth.currentUser != null) {
         Get.offAll(() => const HomePageScreen());
       } else {
         Get.offAll(() => const LoginScreen());
@@ -120,6 +120,10 @@ class AuthRepository extends GetxController {
             await _auth.signInWithCredential(credential);
         User? user = userCredential.user;
 
+        if (userCredential.additionalUserInfo?.isNewUser == true) {
+          // Add user data to Firestore
+          await _addUserDataToFirestore(user);
+        }
         if (user != null) {
           Get.offAll(() => const HomePageScreen());
           Get.snackbar('Success', 'Login Berhasil!!');
@@ -135,6 +139,17 @@ class AuthRepository extends GetxController {
       // Handle the error
       Get.snackbar("Google Login Error", "Failed to login with Google");
       return null;
+    }
+  }
+
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  Future<void> _addUserDataToFirestore(User? user) async {
+    if (user != null) {
+      await _firestore.collection('points').doc(user.uid).set({
+        'point': 10,
+        'idUser': user.email,
+        // Add other user data as needed
+      });
     }
   }
 }

@@ -1,26 +1,53 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ewise/core/values/api.dart';
+import 'package:ewise/data/model/pickup_model.dart';
+import 'package:ewise/data/model/riwayat_model.dart';
+import 'package:ewise/data/repository/auth_repository.dart';
+import 'package:ewise/data/repository/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:latlong2/latlong.dart' as latLng;
 import 'package:location/location.dart' as location;
+import 'package:latlong2/latlong.dart' as latLng;
 import 'package:location/location.dart';
-
-import 'package:ewise/core/values/api.dart';
-import 'package:ewise/data/model/pickup_model.dart';
+import 'package:syncfusion_flutter_maps/maps.dart';
 
 class PickupController extends GetxController {
+  final _authRepo = Get.find<AuthRepository>();
   late MapController mapController = MapController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final _userRepo = Get.put(UserRepository());
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  RxDouble userPoints = 0.0.obs;
+  RxDouble poinMasuk = 0.0.obs;
+  RxDouble poinKeluar = 0.0.obs;
+  RxDouble selectedNominal = 0.0.obs;
+  RxDouble nominal = 0.0.obs;
+  RxString ewallet = ''.obs;
+  RxString akun = ''.obs;
+
+  LocationData? currentLocation;
+  Map<String, dynamic> nearestWasteCollectionPoint = {};
+  List<Map<String, dynamic>> nearestWasteCollectionPoints = [];
+  List<latLng.LatLng> polylineCoordinates = [];
+
   String? selectedWasteSize;
   String? name;
   String? address;
   double? latitude;
   double? longitude;
+
+  bool isMarkerDraggable = false;
+
+  late MapTileLayerController mapsController;
+  List<MapLatLng> mapMarkers = [];
+
   late TextEditingController pickupLocationController;
   late TextEditingController ebankController;
   late TextEditingController scheduleController;
@@ -32,6 +59,13 @@ class PickupController extends GetxController {
     ebankController = TextEditingController();
     scheduleController = TextEditingController();
     notesController = TextEditingController();
+    mapsController = MapTileLayerController();
+
+    getCurrentLocation();
+    getUserLocationDetails();
+
+    findNearestWasteCollectionPoints();
+    findNearestWasteCollectionPoint();
     super.onInit();
     update();
   }
@@ -106,30 +140,90 @@ class PickupController extends GetxController {
       'longitude': 107.6426034,
     },
   ];
-  List<latLng.LatLng> polylineCoordinates = [];
-  LocationData? currentLocation;
-  Map<String, dynamic> nearestWasteCollectionPoint = {};
+  List<Map<String, dynamic>> findNearestWasteCollectionPoints() {
+    if (currentLocation == null) {
+      return [];
+    }
 
-  void getCurrentLocation() {
-    location.Location locationService = location.Location();
+    List<Map<String, dynamic>> sortedPoints = List.from(wasteCollectionPoints);
 
-    locationService.onLocationChanged
-        .listen((location.LocationData currentLoc) {
-      print("Updated Location: $currentLoc");
+    sortedPoints.sort((a, b) {
+      double distanceA = Geolocator.distanceBetween(
+        currentLocation!.latitude!,
+        currentLocation!.longitude!,
+        a['latitude'],
+        a['longitude'],
+      );
 
-      currentLocation = currentLoc;
-      nearestWasteCollectionPoint = findNearestWasteCollectionPoint();
+      double distanceB = Geolocator.distanceBetween(
+        currentLocation!.latitude!,
+        currentLocation!.longitude!,
+        b['latitude'],
+        b['longitude'],
+      );
 
-      // Fetch user location details when location changes
-      getUserLocationDetails();
-
-      update();
+      return distanceA.compareTo(distanceB);
     });
+
+    List<Map<String, dynamic>> nearestPoints = sortedPoints.take(3).toList();
+
+    List<Map<String, dynamic>> nearestEbanks = nearestPoints.map((point) {
+      var ebank = wasteCollectionPoints.firstWhere(
+        (ebank) =>
+            ebank['latitude'] == point['latitude'] &&
+            ebank['longitude'] == point['longitude'],
+      );
+
+      return {
+        ...point,
+        'ebankName': ebank['name'],
+        'ebankAddress': ebank['address'],
+      };
+    }).toList();
+
+    return nearestEbanks;
+  }
+
+  Future<LocationData?> getCurrentLocation() async {
+    try {
+      location.Location locationService = location.Location();
+      locationService.changeSettings(
+        accuracy: location.LocationAccuracy.high,
+        distanceFilter: 10.0,
+      );
+
+      LocationData? currentLoc = await locationService.getLocation();
+      currentLocation = currentLoc;
+      nearestWasteCollectionPoints = findNearestWasteCollectionPoints();
+
+      if (nearestWasteCollectionPoints.isNotEmpty) {
+        nearestWasteCollectionPoint = nearestWasteCollectionPoints.first;
+      } else {
+        nearestWasteCollectionPoint = {};
+      }
+// Only update user location details if service is enabled
+      if (await locationService.serviceEnabled()) {
+        await getUserLocationDetails();
+        findNearestWasteCollectionPoints();
+      }
+
+      await getUserLocationDetails();
+      update();
+      return currentLoc;
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error getting current location: $e");
+      }
+      return null;
+    }
   }
 
   Future<void> getUserLocationDetails() async {
     try {
-      location.Location locationService = location.Location();
+      final locationService = location.Location();
+
+      // Get the current location
+      final currentLoc = await locationService.getLocation();
 
       // Check if location services are enabled
       bool serviceEnabled = await locationService.serviceEnabled();
@@ -141,30 +235,30 @@ class PickupController extends GetxController {
         }
       }
 
-      // Get the current location
-      LocationData currentLoc = await locationService.getLocation();
-
       // Get location details using Geocoding
-      List<Placemark> placemarks = await placemarkFromCoordinates(
+      final placemarks = await placemarkFromCoordinates(
         currentLoc.latitude!,
         currentLoc.longitude!,
       );
 
       // Extracting location details
-      name = placemarks.first.name ?? "";
-      String thoroughfare = placemarks.first.thoroughfare ?? "";
-      String subThoroughfare = placemarks.first.subThoroughfare ?? "";
-      String locality = placemarks.first.locality ?? "";
-      String subLocality = placemarks.first.subLocality ?? "";
+      final name = placemarks.first.name ?? "";
+      final thoroughfare = placemarks.first.thoroughfare ?? "";
+      final subThoroughfare = placemarks.first.subThoroughfare ?? "";
+      final locality = placemarks.first.locality ?? "";
+      final subLocality = placemarks.first.subLocality ?? "";
 
       // Construct a clearer address
-      address = "$name $subThoroughfare $thoroughfare, $subLocality $locality";
-      latitude = currentLoc.latitude!;
-      longitude = currentLoc.longitude!;
+      final address =
+          "$name $subThoroughfare $thoroughfare, $subLocality $locality";
+      final latitude = currentLoc.latitude!;
+      final longitude = currentLoc.longitude!;
 
-      // Update controllers for location fields
-      pickupLocationController.text = address!;
-      ebankController.text = nearestWasteCollectionPoint['name'] ?? "";
+      // Update variables with user details
+      this.name = name;
+      this.address = address;
+      this.latitude = latitude;
+      this.longitude = longitude;
 
       // Use the location details as needed
       print("Location Name: $name");
@@ -172,43 +266,30 @@ class PickupController extends GetxController {
       print("Latitude: $latitude");
       print("Longitude: $longitude");
 
-      // Update the UI or save the location details as needed
+      // Update controllers for location fields
+      pickupLocationController.text = address;
+
+      // Fetch the nearest e-bank based on waste collection points
+      nearestWasteCollectionPoints = findNearestWasteCollectionPoints();
+      if (nearestWasteCollectionPoints.isNotEmpty) {
+        nearestWasteCollectionPoint = nearestWasteCollectionPoints.first;
+        ebankController.text = nearestWasteCollectionPoint['name'] ?? "";
+      } else {
+        ebankController.text = "";
+        nearestWasteCollectionPoint = {};
+      }
+      print("ebank: $nearestWasteCollectionPoint?['name']");
       update();
     } catch (e) {
       print("Error getting user location details: $e");
     }
   }
 
-  void getPolyPoints() async {
-    if (currentLocation != null) {
-      PolylinePoints polylinePoints = PolylinePoints();
-
-      try {
-        PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-          googleApiKey,
-          PointLatLng(
-            currentLocation!.latitude!,
-            currentLocation!.longitude!,
-          ),
-          PointLatLng(
-            wasteCollectionPoints.first['latitude'],
-            wasteCollectionPoints.first['longitude'],
-          ),
-        );
-
-        if (result.points.isNotEmpty) {
-          polylineCoordinates.clear();
-          for (var point in result.points) {
-            polylineCoordinates
-                .add(latLng.LatLng(point.latitude, point.longitude));
-          }
-          print("Polyline Coordinates: $polylineCoordinates");
-          update();
-        }
-      } catch (e) {
-        print("Error getting polyline points: $e");
-      }
-    }
+  Future<void> initPage() async {
+    getCurrentLocation();
+    getUserLocationDetails();
+    findNearestWasteCollectionPoints();
+    update();
   }
 
   Map<String, dynamic> findNearestWasteCollectionPoint() {
@@ -234,19 +315,6 @@ class PickupController extends GetxController {
     ebankController.text = nearestPoint?['name'] ?? "";
 
     return nearestPoint ?? {};
-  }
-
-  void _getCurrentUserId() {
-    User? user = _auth.currentUser;
-
-    if (user != null) {
-      String userId = user.uid;
-      print("Current User ID: $userId");
-      // Set userId to your PickupModel or use it as needed.
-    } else {
-      print("No user is currently logged in.");
-      // Implement logic for handling no logged-in user, such as navigating to the login screen.
-    }
   }
 
   void submitPickupForm() async {
@@ -279,18 +347,122 @@ class PickupController extends GetxController {
       userLongitude: longitude ??
           0.0, // User details // Replace with your logic for getting user address
       pickupDate: schedule,
-      notes: notes,
+      notes: notes, timestamp: Timestamp.now(),
     );
 
     // Save the pickup information to Firebase
     try {
       await FirebaseFirestore.instance
           .collection('pickups')
-          .add(pickupModel.toJson());
+          .add(pickupModel.toJson())
+          .whenComplete(() {
+        Get.snackbar('Success', 'Mohon Tunggu Akan Segera diProses');
+      });
       // Show success message or navigate to the next screen
     } catch (e) {
       print("Error submitting pickup form: $e");
       // Show error message
+    }
+  }
+
+  Future<void> updateUserPoints() async {
+    final userEmail = _authRepo.firebaseUser?.email;
+    if (userEmail != null) {
+      final points = await _userRepo.getUserPoints(userEmail);
+      final wisePointData = await _userRepo.getUserWisePoints(userEmail);
+
+      userPoints.value = points;
+      poinMasuk.value = wisePointData.masuk;
+      poinKeluar.value = wisePointData.keluar;
+
+      update();
+    }
+  }
+
+  Future<void> updateLastPickupStatus(String newStatus) async {
+    try {
+      final userEmail = _authRepo.firebaseUser?.email;
+      var points;
+      if (userEmail != null) {
+        var statusQuery = await FirebaseFirestore.instance
+            .collection('pickups')
+            .where('pickupStatus', isEqualTo: 'Konfirmasi')
+            .get();
+        var statusQueryData = statusQuery.docs.first.data();
+        var status = statusQueryData['wasteSize'] ?? '';
+
+        // Update user points
+        var userPointsQuery = await FirebaseFirestore.instance
+            .collection('points')
+            .where('idUser', isEqualTo: userEmail)
+            .get();
+        var userPointsData = userPointsQuery.docs.first.data();
+        points = userPointsData['masuk'] ?? 0.0;
+
+        await updateUserPoints();
+        final newPoints;
+        // Deduct the selected nominal from user points
+        if (status == 'Kecil') {
+          newPoints = 20.0;
+        } else if (status == 'Sedang') {
+          newPoints = 40.0;
+        } else {
+          newPoints = 60.0;
+        }
+
+        // Update user points in Firestore
+        await updateUserPoints();
+
+        // Update the existing document in the "points" collection
+        await FirebaseFirestore.instance
+            .collection('points')
+            .doc(userPointsQuery.docs.first.id) // Specify the document ID
+            .update({
+          'point': userPoints.value + newPoints,
+          'masuk': points + newPoints,
+        });
+
+        selectedNominal.value = newPoints;
+
+        final riwayatDoc = RiwayatModel(
+          idUser: userEmail,
+          pointTukar: nominal.value,
+          uang: selectedNominal.value,
+          ewallete: '',
+          akun: '',
+          tukar: false,
+          timestamp: DateTime.now(),
+        ).toJson();
+
+        await FirebaseFirestore.instance.collection('riwayat').add(riwayatDoc);
+        // Query pickups for the current user
+        QuerySnapshot<Map<String, dynamic>> querySnapshot = await _firestore
+            .collection('pickups')
+            .where('pickupStatus', isEqualTo: 'Konfirmasi')
+            .limit(1)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          // Retrieve the latest pickup
+          DocumentSnapshot<Map<String, dynamic>> lastPickupDoc =
+              querySnapshot.docs.first;
+
+          // Update the status of the last pickup
+          await _firestore
+              .collection('pickups')
+              .doc(lastPickupDoc.id)
+              .update({'pickupStatus': newStatus}).whenComplete(() {
+            Get.snackbar('Success', 'Pesenan Telah Selesai dilakukan!');
+          });
+
+          // Notify listeners or update local state if needed
+          update();
+        } else {
+          print('No pickups found for the user.');
+        }
+      }
+    } catch (e) {
+      print('Error updating last pickup status: $e');
     }
   }
 }

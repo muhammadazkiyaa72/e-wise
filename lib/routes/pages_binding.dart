@@ -1,3 +1,4 @@
+import 'package:ewise/presentation/alamat_favorite/alamat_favorite_screen.dart';
 import 'package:ewise/presentation/chat/chat_binding.dart';
 import 'package:ewise/presentation/chat/chat_screen.dart';
 import 'package:ewise/presentation/education/education_screen.dart';
@@ -9,12 +10,15 @@ import 'package:ewise/presentation/homepage/components/homepage.dart';
 import 'package:ewise/presentation/homepage/home_binding.dart';
 import 'package:ewise/presentation/homepage/homepage_screen.dart';
 import 'package:ewise/presentation/login/login_binding.dart';
+import 'package:ewise/presentation/penukaranpoin/penukaranpoin_binding.dart';
 import 'package:ewise/presentation/pickup/pickup_binding.dart';
 import 'package:ewise/presentation/profile/profile_binding.dart';
 import 'package:ewise/presentation/profile/profile_screen.dart';
 import 'package:ewise/presentation/register/register_binding.dart';
 import 'package:ewise/presentation/register/register_screen.dart';
+import 'package:ewise/presentation/riwayatpenukaran/riwayat_penukaran_binding.dart';
 import 'package:ewise/presentation/splash/splash_binding.dart';
+import 'package:ewise/presentation/status_pickup/status_pickup_binding.dart';
 import 'package:ewise/presentation/wisepoin/wisepoin.dart';
 import 'package:ewise/presentation/login/login_screen.dart';
 import 'package:ewise/presentation/notification/notification.dart';
@@ -24,6 +28,7 @@ import 'package:ewise/presentation/pickup/pickup.dart';
 import 'package:ewise/presentation/riwayatpenukaran/riwayat_penukaran.dart';
 import 'package:ewise/presentation/splash/splash_screen.dart';
 import 'package:ewise/presentation/status_pickup/status_pickup_screen.dart';
+import 'package:ewise/presentation/wisepoin/wisepoin_binding.dart';
 import 'package:ewise/routes/routes.dart';
 import 'package:get/get.dart';
 
@@ -51,6 +56,7 @@ class Pages {
     GetPage(
       name: Routes.statusPickup,
       page: () => const StatusPickupScreen(),
+      binding: StatusPickupBinding(),
     ),
     GetPage(
       name: Routes.chat,
@@ -84,6 +90,7 @@ class Pages {
     GetPage(
       name: Routes.penukaranPoin,
       page: () => const PenukaranPoin(),
+      binding: PenukaranPoinBinding(),
     ),
     GetPage(
       name: Routes.pickup,
@@ -92,16 +99,22 @@ class Pages {
     ),
     GetPage(
       name: Routes.riwayatPenukaran,
-      page: () => const RiwayatPenukaran(),
+      page: () => const RiwayatPenukaranScreen(),
+      binding: RiwayatPenukaranBinding(),
     ),
     GetPage(
       name: Routes.wisepoin,
       page: () => const WisePoint(),
+      binding: WisepoinBinding(),
     ),
     GetPage(
       name: Routes.forgetPassword,
       page: () => const ForgetPasswordEmailPage(),
       binding: ForgetPasswordEmailBinding(),
+    ),
+    GetPage(
+      name: Routes.alamatfavorite,
+      page: () => const AlamatFavoriteScreen(),
     ),
   ];
 }

@@ -1,5 +1,9 @@
+import 'package:ewise/core/styles.dart';
+import 'package:ewise/core/values/font_weight.dart';
+import 'package:ewise/presentation/status_pickup/status_pickup_controller.dart';
 import 'package:ewise/presentation/widgets/status_item.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class KonfirmasiScreen extends StatefulWidget {
   const KonfirmasiScreen({super.key});
@@ -9,44 +13,68 @@ class KonfirmasiScreen extends StatefulWidget {
 }
 
 class _KonfirmasiScreenState extends State<KonfirmasiScreen> {
+  final StatusPickupController _statusPickupController =
+      Get.put(StatusPickupController());
+
+  @override
+  void initState() {
+    super.initState();
+    _statusPickupController.fetchRiwayatPickupKonfirmasi();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.all(4.0),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 36,
-            ),
-            StatusItem(
-              kode: 'O-231125-AGJLRCQ',
-              ukuran: 'Sedang',
-              jadwal: 'Senin, 8 Januari 2024',
-              ebank: 'Bank Sampah Bersinar',
-              assetImage: 'assets/icons/ic_konfirmasi.png',
-            ),
-            SizedBox(
-              height: 21,
-            ),
-            StatusItem(
-              kode: 'O-237725-QWERTY',
-              ukuran: 'Sedang',
-              jadwal: 'Senin, 8 Januari 2024',
-              ebank: 'Bank Sampah Bersinar',
-              assetImage: 'assets/icons/ic_konfirmasi.png',
-            ),
-            SizedBox(
-              height: 21,
-            ),
-            StatusItem(
-              kode: 'O-239425-ASDFGHJ',
-              ukuran: 'Sedang',
-              jadwal: 'Senin, 8 Januari 2024',
-              ebank: 'Bank Sampah Bersinar',
-              assetImage: 'assets/icons/ic_konfirmasi.png',
-            ),
-          ],
+    return Obx(
+      () => SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 36,
+              ),
+              if (_statusPickupController
+                  .riwayatPickupListKonfirmasi.isNotEmpty)
+                for (var pickup
+                    in _statusPickupController.riwayatPickupListKonfirmasi)
+                  Column(
+                    children: [
+                      StatusItem(
+                        kode: pickup.pickupId!,
+                        ukuran: pickup.wasteSize,
+                        jadwal: pickup.pickupDate,
+                        ebank: pickup.ebankName,
+                        assetImage: 'assets/icons/ic_konfirmasi.png',
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
+              if (_statusPickupController.riwayatPickupListKonfirmasi.isEmpty)
+                Column(
+                  children: [
+                    Image.asset(
+                      'assets/img/no_found.png',
+                      width: 250,
+                    ),
+                    const SizedBox(
+                      height: 38,
+                    ),
+                    Text(
+                      'Belum ada pesanan pada status ini',
+                      style: Styles.blackTextStyle.copyWith(
+                        fontSize: 15,
+                        fontWeight: AppFontWeight.medium,
+                      ),
+                    )
+                  ],
+                ),
+              const SizedBox(
+                height: 21,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -16,4 +16,5 @@ class Routes {
   static const wisepoin = '/wisepoin';
   static const profile = '/profile';
   static const forgetPassword = '/forgetPassword';
+  static const alamatfavorite = '/alamatfavorite';
 }

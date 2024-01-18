@@ -22,4 +22,7 @@ class Styles {
   static TextStyle nTextStyle = GoogleFonts.poppins(
     color: AppColors.n20,
   );
+  static TextStyle redTextStyle = GoogleFonts.poppins(
+    color: AppColors.e40,
+  );
 }

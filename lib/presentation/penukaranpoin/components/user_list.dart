@@ -1,24 +1,36 @@
 import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/font_weight.dart';
+import 'package:ewise/presentation/penukaranpoin/penukaranpoin_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class UserList extends StatelessWidget {
+  final VoidCallback onNextTab;
   final List userEWallets;
-  const UserList({super.key, required this.userEWallets});
+  const UserList(
+      {super.key, required this.userEWallets, required this.onNextTab});
 
   @override
   Widget build(BuildContext context) {
+    final PenukaranPoinController controller =
+        Get.put(PenukaranPoinController());
     return ListView.separated(
         shrinkWrap: true,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
-              print(userEWallets[index]['eWallet']);
+              if (userEWallets[index]['isAvailable']) {
+                controller.updateSelectedWallet(
+                  userEWallets[index]['eWallet'],
+                  userEWallets[index]['number'],
+                );
+                onNextTab();
+              }
             },
             child: Container(
-              color: Color(0xFFFEF7FF),
+              color: const Color(0xFFFEF7FF),
               width: double.infinity,
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -60,7 +72,7 @@ class UserList extends StatelessWidget {
                         style: Styles.blackTextStyle.copyWith(
                             fontSize: 12, fontWeight: AppFontWeight.regular),
                       ),
-                      Icon(
+                      const Icon(
                         Icons.navigate_next,
                         size: 20,
                       )

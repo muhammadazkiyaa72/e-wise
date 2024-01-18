@@ -2,6 +2,7 @@ import 'package:ewise/core/styles.dart';
 import 'package:ewise/core/values/colors.dart';
 import 'package:ewise/core/values/font_weight.dart';
 import 'package:ewise/presentation/riwayatpenukaran/riwayat_penukaran.dart';
+import 'package:ewise/presentation/wisepoin/wisepoin_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,6 +14,14 @@ class PoinCard extends StatefulWidget {
 }
 
 class _PoinCardState extends State<PoinCard> {
+  final WisepointController controller = Get.put(WisepointController());
+  @override
+  void initState() {
+    super.initState();
+    controller.updateUserPoints();
+    controller.updateUserName();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -35,7 +44,7 @@ class _PoinCardState extends State<PoinCard> {
                         fontWeight: AppFontWeight.semiBold)),
                 TextButton(
                   onPressed: () {
-                    Get.to(const RiwayatPenukaran());
+                    Get.to(const RiwayatPenukaranScreen());
                   },
                   style: TextButton.styleFrom(
                     minimumSize: Size.zero,
@@ -54,16 +63,22 @@ class _PoinCardState extends State<PoinCard> {
                 )
               ],
             ),
-            Text(
-              '500',
-              style: Styles.primaryTextStyle
-                  .copyWith(fontSize: 40, fontWeight: AppFontWeight.bold),
+            Obx(
+              () => Text(
+                '${controller.userPoints.toInt()}',
+                style: Styles.primaryTextStyle.copyWith(
+                  fontSize: 40,
+                  fontWeight: AppFontWeight.bold,
+                ),
+              ),
             ),
-            Text('Zahid Azmi Ibrahim',
-                style: TextStyle(
-                    color: AppColors.p30,
-                    fontSize: 14,
-                    fontWeight: AppFontWeight.semiBold))
+            Obx(() => Text(
+                  '${controller.userName}',
+                  style: TextStyle(
+                      color: AppColors.p30,
+                      fontSize: 14,
+                      fontWeight: AppFontWeight.semiBold),
+                ))
           ],
         ),
       ),
