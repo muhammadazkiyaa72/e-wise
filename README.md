@@ -10,52 +10,66 @@ App Features
 4. User can get more educated by e-waste management information : Users can become educated about the environmental hazards of e-waste, proper e-waste management practices, and the benefits/creativity that can be derived from such e-waste with all the content data are stored and updated with FireBase.
 
 login
-![alt text](https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/login.png?raw=true)
+
+<img src="https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/login.png?raw=true" width="300">
 
 register
-![alt text](https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/register.png?raw=true)
+
+<img src="https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/register.png?raw=true" width="300">
 
 Home
-![alt text](https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/home.png?raw=true)
+
+<img src="https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/home.png?raw=true" width="300">
 
 Pickup
-![alt text](https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/pickup.png?raw=true)
-![alt text](https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/pickup2.png?raw=true)
+
+<img src="https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/pickup.png?raw=true" width="300">
+<img src="https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/pickup2.png?raw=true" width="300">
 
 Find E-Bank
-![alt text](https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/findebank.png?raw=true)
+
+<img src="https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/findebank.png?raw=true" width="300">
 
 WisePoin
-![alt text](https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/wisepoint.png?raw=true)
+
+<img src="https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/wisepoint.png?raw=true" width="300">
 
 Education
-![alt text](https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/education.png?raw=true)
+
+<img src="https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/education.png?raw=true" width="300">
 
 Notification
-![alt text](https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/notifikasi.png?raw=true)
 
+<img src="https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/notifikasi.png?raw=true" width="300">
 
 Status Pemesanan
-![alt text](https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/status_pesanan.png?raw=true)
+
+<img src="https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/status_pesanan.png?raw=true" width="300">
 
 Chat
-![alt text](https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/chat.png?raw=true)
+
+<img src="https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/chat.png?raw=true" width="300">
 
 Profile
-![alt text](https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/profile.png?raw=true)
+
+<img src="https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/profile.png?raw=true" width="300">
 
 Riwayat Tukar Poin
-![alt text](https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/riwayat_tukarpoin.png?raw=true)
+
+<img src="https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/riwayat_tukarpoin.png?raw=true" width="300">
 
 Bantuan Dan Laporan
-![alt text](https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/pusatbantuan.png?raw=true)
+
+<img src="https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/pusatbantuan.png?raw=true" width="300">
 
 Laporan
-![alt text](https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/laporan.png?raw=true)
+
+<img src="https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/laporan.png?raw=true" width="300">
 
 Alamat Favorite
-![alt text](https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/alamat_favorite.png?raw=true)
+
+<img src="https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/alamat_favorite.png?raw=true" width="300">
 
 Tentang e-wise
-![alt text](https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/about.png?raw=true)
 
+<img src="https://github.com/Wenndyy/e-wise/blob/main/Documentation%20of%20the%20App/about.png?raw=true" width="300">
