@@ -32,20 +32,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   children: [
                     Image.asset(
-                      'assets/img/logo.png',
-                      width: 119,
-                      height: 173,
-                    ),
-                    const SizedBox(
-                      height: 17,
-                    ),
-                    Text(
-                      "e-wise",
-                      style: Styles.primaryTextStyle.copyWith(
-                        decoration: TextDecoration.none,
-                        fontWeight: AppFontWeight.bold,
-                        fontSize: 24,
-                      ),
+                      'assets/img/logo_new.png',
+                      width: 320,
+                      height: 320,
                     ),
                   ],
                 ),

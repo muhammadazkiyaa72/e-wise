@@ -52,23 +52,25 @@ class _KonfirmasiScreenState extends State<KonfirmasiScreen> {
                     ],
                   ),
               if (_statusPickupController.riwayatPickupListKonfirmasi.isEmpty)
-                Column(
-                  children: [
-                    Image.asset(
-                      'assets/img/no_found.png',
-                      width: 250,
-                    ),
-                    const SizedBox(
-                      height: 38,
-                    ),
-                    Text(
-                      'Belum ada pesanan pada status ini',
-                      style: Styles.blackTextStyle.copyWith(
-                        fontSize: 15,
-                        fontWeight: AppFontWeight.medium,
+                Center(
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        'assets/img/no_found.png',
+                        width: 250,
                       ),
-                    )
-                  ],
+                      const SizedBox(
+                        height: 38,
+                      ),
+                      Text(
+                        'Belum ada pesanan pada status ini',
+                        style: Styles.blackTextStyle.copyWith(
+                          fontSize: 15,
+                          fontWeight: AppFontWeight.medium,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               const SizedBox(
                 height: 21,

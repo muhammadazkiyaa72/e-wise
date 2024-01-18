@@ -14,7 +14,8 @@ class StatusItem extends StatelessWidget {
     required this.kode,
     required this.ukuran,
     required this.jadwal,
-    required this.ebank, required this.assetImage,
+    required this.ebank,
+    required this.assetImage,
   });
 
   @override
@@ -50,11 +51,16 @@ class StatusItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                kode,
-                style: Styles.blackTextStyle.copyWith(
-                  fontSize: 15,
-                  fontWeight: AppFontWeight.medium,
+              SizedBox(
+                width: 194,
+                child: Text(
+                  kode,
+                  style: Styles.blackTextStyle.copyWith(
+                    fontSize: 15,
+                    fontWeight: AppFontWeight.medium,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
               Row(
@@ -84,11 +90,17 @@ class StatusItem extends StatelessWidget {
                       fontWeight: AppFontWeight.regular,
                     ),
                   ),
-                  Text(
-                    ebank,
-                    style: Styles.nTextStyle.copyWith(
-                      fontSize: 13,
-                      fontWeight: AppFontWeight.regular,
+                  SizedBox(
+                    width: 194,
+                    child: Text(
+                      ebank,
+                      style: Styles.nTextStyle.copyWith(
+                        fontSize: 13,
+                        fontWeight: AppFontWeight.regular,
+                      ),
+                      textAlign: TextAlign.justify,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                   ),
                 ],

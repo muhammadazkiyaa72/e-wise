@@ -2,6 +2,7 @@ import 'package:ewise/data/repository/auth_repository.dart';
 import 'package:ewise/firebase_options.dart';
 import 'package:ewise/presentation/homepage/homepage_screen.dart';
 import 'package:ewise/presentation/login/login_screen.dart';
+import 'package:ewise/presentation/splash/splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
             // Authentication state has been initialized
             return snapshot.hasData
                 ? const HomePageScreen()
-                : const LoginScreen();
+                : const SplashScreen();
           }
         },
       ),
