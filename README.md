@@ -1,3 +1,12 @@
+The Situ team is the 2024 hackfest team for the Telkom University Bandung chapter. The members are 4 people as follows:
+
+Muhammad Haulul Azkiyaa as Hustler
+Iksan Oktav Risandy as Hipster
+Wendy Noer Isnaeni as Hacker
+Brian Anashari as Hacker
+
+Our team focuses on how to solve problems that exist in the environment around Telkom University.
+
 E-WISE
 We are from TimSitu and want to deploy an application to reduce electronic waste (E-Waste)
 
